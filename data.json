@@ -1,9 +1,26 @@
 {
-    "currentPage": "landing",
-    "onboardingStep": 1,
-    "initialBalance": 0,
-    "accountName": "",
-    "backfillDate": "2024-03-01",
-    "rule": [],
-    "transactions": []
+    "balance": "$4,250.32",
+    "transactions": [
+        {
+            "categoryEmoji": "🛒",
+            "description": "Amazon Marketplace",
+            "date": "Yesterday",
+            "amount": "- $45.00",
+            "type": "expense"
+        },
+        {
+            "categoryEmoji": "🍕",
+            "description": "Dominos Pizza",
+            "date": "Mar 27",
+            "amount": "- $24.50",
+            "type": "expense"
+        },
+        {
+            "categoryEmoji": "💰",
+            "description": "Salary Payout",
+            "date": "Mar 25",
+            "amount": "+ $3,250.00",
+            "type": "income"
+        }
+    ]
 }

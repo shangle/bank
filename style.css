@@ -1,76 +1,69 @@
 :root {
-    --apple-bg: #FBFBFD;
-    --apple-card: rgba(255, 255, 255, 0.8);
-    --m3-surface: #F3F4F9;
-    --m3-primary: #0070BA;
-    --m3-on-primary: #FFFFFF;
-    --m3-primary-container: #D3E4FF;
-    --m3-on-primary-container: #001C38;
-    --growth-green: #00C805;
-    --apple-border: rgba(0, 0, 0, 0.08);
+    --bg-surface: #F8F9FC;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --primary: #0061FF; /* Apple-ish Blue */
+    --text-main: #1C1C1E;
+    --text-muted: #636366;
+    --border: rgba(0, 0, 0, 0.05);
+    --radius-lg: 24px;
+    --radius-xl: 32px;
 }
 
 body {
-    background-color: var(--m3-surface);
-    color: #1C1C1E;
-    letter-spacing: -0.015em;
+    background-color: var(--bg-surface);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.02em;
 }
 
-/* Glassmorphism */
-.glass {
-    background: var(--apple-card);
+/* Glassmorphism & Elevation */
+.glass-card {
+    background: var(--card-bg);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid var(--apple-border);
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+    border-radius: var(--radius-lg);
 }
 
-/* Apple Style Shadows */
-.apple-shadow {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+.m3-tonal-btn {
+    background-color: #E7F0FF;
+    color: var(--primary);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Mavo Overrides */
-[mv-app] .mv-bar.mv-ui {
-    padding: 0;
-    margin-bottom: 1rem;
+.m3-tonal-btn:hover {
+    background-color: #D1E4FF;
+    transform: scale(1.02);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
     background: transparent;
-    border: none;
+}
+::-webkit-scrollbar-thumb {
+    background: #E2E2E2;
+    border-radius: 10px;
 }
 
-.mv-bar.mv-ui .mv-button {
-    background: white;
-    border: 1px solid var(--apple-border);
-    border-radius: 12px;
-    padding: 0.4rem 1rem;
-    font-weight: 600;
-    font-size: 0.75rem;
-    color: #1C1C1E;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+/* Mavo Hide Bar */
+[mv-app] .mv-bar.mv-ui {
+    display: none !important;
 }
 
-/* Ledger UI */
-.income { color: var(--growth-green); font-weight: 700; }
-.income::before { content: "+$"; }
-
-.expense { color: #1C1C1E; font-weight: 500; }
-.expense::before { content: "-$"; }
-
-tr.Scheduled { opacity: 0.5; }
-tr.Scheduled [property="status"] {
-    background: var(--m3-primary-container);
-    color: var(--m3-on-primary-container);
+/* Typography Polish */
+.balance-text {
+    font-weight: 800;
+    letter-spacing: -0.04em;
 }
 
-/* Animations */
-.transition-spring {
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.transaction-item {
+    transition: background 0.2s ease;
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-slide-up {
-    animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+.transaction-item:hover {
+    background: rgba(0, 0, 0, 0.02);
 }

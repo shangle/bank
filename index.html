@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VibeBank | Fictional Finance</title>
+    <title>VibeBank | Digital Finance</title>
     
-    <!-- Dependencies -->
+    <!-- External UI Deps -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js"></script>
     
-    <!-- Mavo -->
+    <!-- Mavo Core -->
     <link rel="stylesheet" href="https://get.mavo.io/mavo.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://get.mavo.io/mavo.js"></script>
@@ -18,11 +18,14 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    borderRadius: { '3xl': '24px', '4xl': '32px' },
+                    borderRadius: { '2xl': '20px', '3xl': '24px', '4xl': '32px' },
                     colors: {
-                        appleBlue: '#007AFF',
-                        m3Primary: '#0070BA',
-                        m3Surface: '#F3F4F9',
+                        appleBlue: '#0061FF',
+                        m3Surface: '#F8F9FC',
+                        m3Tonal: '#E7F0FF',
+                    },
+                    fontFamily: {
+                        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
                     }
                 }
             }
@@ -31,165 +34,128 @@
 </head>
 <body class="bg-m3Surface text-slate-900 font-sans antialiased min-h-screen">
 
-    <!-- App Root with Toolbar Hidden -->
-    <div mv-app="vibebank" 
-         mv-storage="local" 
-         mv-bar="none"
-         mv-init="data.json"
-         class="flex flex-col min-h-screen">
+    <div mv-app="vibebank" mv-storage="local" class="flex flex-col min-h-screen p-4 md:p-8">
         
-        <span property="currentPage" hidden>landing</span>
-
-        <!-- Apple-Style Nav -->
-        <nav class="glass sticky top-0 z-50 h-16 flex items-center px-6 transition-all duration-300">
-            <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-                <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.reload()">
-                    <div class="w-8 h-8 bg-m3Primary rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-xs">V</span>
-                    </div>
-                    <span class="text-xl font-bold tracking-tight">VibeBank</span>
+        <!-- Header / Profile Section -->
+        <header class="max-w-4xl mx-auto w-full flex justify-between items-center mb-10">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-appleBlue rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <span class="text-white font-black text-sm">VB</span>
                 </div>
-                
-                <div mv-if="currentPage = 'landing'" class="flex gap-6 items-center">
-                    <button onclick="startInstantOnboarding()" class="bg-m3Primary text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-spring active:scale-95 shadow-lg shadow-blue-500/20">
-                        Get Started
-                    </button>
-                </div>
-
-                <div mv-if="currentPage = 'dashboard'" class="flex gap-4 items-center">
-                    <button onclick="Mavo.all.vibebank.root.children.currentPage.setValue('landing')" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition">Sign Out</button>
-                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-900">VibeBank</span>
             </div>
-        </nav>
-
-        <!-- PAGE 1: HERO -->
-        <main mv-if="currentPage = 'landing'" class="flex-grow flex flex-col items-center justify-center text-center px-6 py-20">
-            <div class="animate-slide-up">
-                <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-500">
-                    The bank designed <br/>by a feeling.
-                </h1>
-                <p class="text-lg md:text-xl text-slate-500 max-w-xl mx-auto mb-10 leading-relaxed">
-                    VibeBank uses synthetic financial genetics to build your entire banking history in seconds. Fast, safe, and entirely fictional.
-                </p>
-                <div class="flex gap-4 justify-center">
-                    <button onclick="startInstantOnboarding()" class="bg-m3Primary text-white px-8 py-4 rounded-full font-bold text-lg shadow-2xl shadow-blue-500/20 hover:scale-105 transition-spring">
-                        Open Account
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <!-- PAGE 2: VERIFICATION -->
-        <main mv-if="currentPage = 'onboarding'" class="flex-grow flex items-center justify-center p-6">
-            <div class="bg-white rounded-4xl p-10 max-w-sm w-full apple-shadow text-center">
-                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-8">
-                    <div class="w-12 h-12 border-4 border-m3Primary border-t-transparent rounded-full animate-spin"></div>
-                </div>
-                <h2 class="text-2xl font-bold mb-2 text-slate-900">Verifying Vibe</h2>
-                <p class="text-slate-400 text-sm mb-8" id="verification-text">Syncing with fictional reality...</p>
-                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                    <div id="progress-bar" class="bg-m3Primary h-full w-0 transition-all-slow"></div>
-                </div>
-            </div>
-        </main>
-
-        <!-- PAGE 3: DASHBOARD -->
-        <main mv-if="currentPage = 'dashboard'" class="flex-grow max-w-7xl mx-auto w-full p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- Left: Account & Rules -->
-            <div class="lg:col-span-4 space-y-6">
-                <!-- Account Card -->
-                <div class="bg-white rounded-3xl p-8 apple-shadow border border-white">
-                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">Account Balance</span>
-                    <div class="text-5xl font-bold tracking-tighter mb-8 text-slate-900" property="currentBalance" mv-value="calculateBalance(transactions)">$0.00</div>
-                    
-                    <div class="pt-6 border-t border-slate-50">
-                        <label class="text-[10px] font-black text-slate-300 uppercase block mb-1">Nickname</label>
-                        <input property="accountName" class="w-full text-lg font-bold focus:outline-none bg-transparent text-slate-800" placeholder="My Checking">
-                    </div>
-                </div>
+            <div class="w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm overflow-hidden">
+                <img src="https://ui-avatars.com/api/?name=Joe+Average&background=random" alt="User Profile">
+            </div>
+        </header>
 
-                <!-- Simulation Info -->
-                <div class="bg-blue-50 rounded-3xl p-6 border border-blue-100/50">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center apple-shadow">
-                            <span class="text-m3Primary">⚙️</span>
-                        </div>
-                        <h3 class="font-bold text-slate-800">Engine</h3>
-                    </div>
-                    <div class="space-y-4">
-                        <input property="backfillDate" type="date" class="w-full bg-white rounded-xl px-4 py-2 text-sm font-bold border-none apple-shadow focus:ring-2 focus:ring-m3Primary/20 text-slate-700">
-                        <button onclick="runSimulation()" class="w-full bg-m3Primary text-white py-3 rounded-2xl font-bold text-sm shadow-lg shadow-blue-500/10 active:scale-95 transition-spring">
-                            Refresh History
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Rules -->
-                <div class="space-y-4">
-                    <h3 class="text-xs font-black text-slate-400 uppercase px-4 tracking-widest">Financial Rules</h3>
-                    <div mv-multiple="rule" class="bg-white rounded-2xl p-4 apple-shadow border border-white mb-3">
-                        <input property="ruleDescription" class="w-full font-bold text-sm border-b border-slate-50 mb-3 focus:outline-none text-slate-800" placeholder="Rule Name">
-                        <div class="grid grid-cols-2 gap-2">
-                            <select property="ruleType" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase text-slate-600">
-                                <option value="income">Income</option>
-                                <option value="expense">Expense</option>
-                            </select>
-                            <input property="ruleAmount" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold text-slate-700" placeholder="$">
-                            <select property="ruleFrequency" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase text-slate-600">
-                                <option value="daily">Daily</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="once">Once</option>
-                            </select>
-                            <input property="ruleVariability" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold text-slate-700" placeholder="Var %">
-                        </div>
-                    </div>
-                    <button class="mv-add-rule w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold text-xs hover:border-m3Primary hover:text-m3Primary transition-all uppercase tracking-tighter">
-                        + New Core Rule
+        <!-- Main Dashboard Content -->
+        <main class="max-w-4xl mx-auto w-full space-y-8">
+            
+            <!-- Hero Balance Card -->
+            <section class="glass-card p-10 flex flex-col items-center text-center">
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Current Total Balance</span>
+                <div class="balance-text text-6xl md:text-7xl text-slate-900 mb-8" property="balance">$4,250.32</div>
+                
+                <!-- Quick Actions (M3 Style) -->
+                <div class="flex gap-4 w-full max-w-sm">
+                    <button class="m3-tonal-btn flex-1 py-4 rounded-3xl flex flex-col items-center gap-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Send</span>
+                    </button>
+                    <button class="m3-tonal-btn flex-1 py-4 rounded-3xl flex flex-col items-center gap-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Pay</span>
+                    </button>
+                    <button class="m3-tonal-btn flex-1 py-4 rounded-3xl flex flex-col items-center gap-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Request</span>
                     </button>
                 </div>
-            </div>
+            </section>
 
-            <!-- Right: Ledger -->
-            <div class="lg:col-span-8">
-                <div class="bg-white rounded-4xl p-8 apple-shadow border border-white min-h-full">
-                    <div class="flex justify-between items-center mb-10">
-                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Ledger</h2>
-                        <button onclick="downloadCSV()" class="text-xs font-black text-m3Primary uppercase tracking-tighter hover:underline">Export CSV</button>
+            <!-- Accounts Section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="glass-card p-6 flex justify-between items-center group cursor-pointer hover:border-appleBlue/20 transition-all">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900">Main Checking</h3>
+                        <span class="text-xs text-slate-400">Account • 4291</span>
                     </div>
+                    <div class="text-lg font-bold text-slate-800">$2,450.00</div>
+                </div>
+                <div class="glass-card p-6 flex justify-between items-center group cursor-pointer hover:border-appleBlue/20 transition-all">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900">Savings</h3>
+                        <span class="text-xs text-slate-400">Account • 8820</span>
+                    </div>
+                    <div class="text-lg font-bold text-slate-800">$1,800.32</div>
+                </div>
+            </section>
 
-                    <div class="overflow-hidden">
-                        <table class="w-full text-left">
-                            <thead class="border-b border-slate-50">
-                                <tr class="text-[10px] font-black text-slate-300 uppercase tracking-widest">
-                                    <th class="pb-4 px-2">Date</th>
-                                    <th class="pb-4 px-2">Description</th>
-                                    <th class="pb-4 px-2 text-right">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                <tr mv-multiple="transactions" class="group transition-all hover:bg-slate-50 [status]">
-                                    <td class="py-4 px-2 text-xs font-bold text-slate-400" property="date"></td>
-                                    <td class="py-4 px-2 text-sm font-bold text-slate-800" property="description"></td>
-                                    <td class="py-4 px-2 text-sm text-right font-black" property="amount" class="[type]"></td>
-                                    <td property="status" hidden></td>
-                                    <td property="type" hidden></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                        <div id="empty-ledger-state" style="display:none;" class="py-20 text-center opacity-20">
-                            <div class="text-4xl mb-2">🧊</div>
-                            <p class="font-bold text-slate-900">Ledger is frozen. Run engine.</p>
+            <!-- Recent Activity Ledger -->
+            <section class="space-y-4">
+                <div class="flex justify-between items-center px-4">
+                    <h2 class="text-lg font-bold text-slate-900">Recent Activity</h2>
+                    <button class="text-[10px] font-black uppercase text-appleBlue hover:underline tracking-widest">View All</button>
+                </div>
+
+                <div class="glass-card overflow-hidden divide-y divide-slate-50">
+                    <div mv-multiple="transactions" class="transaction-item px-6 py-5 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center text-lg">
+                                <span property="categoryEmoji" mv-default="🛒">🛒</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900" property="description">Amazon Marketplace</h4>
+                                <span class="text-xs text-slate-400" property="date">Yesterday</span>
+                            </div>
+                        </div>
+                        <div class="text-sm font-black text-slate-900">
+                            <span property="type" hidden mv-default="expense">expense</span>
+                            <span property="amount" mv-default="- $45.00">- $45.00</span>
                         </div>
                     </div>
+                    
+                    <!-- Placeholder POC Rows -->
+                    <div class="transaction-item px-6 py-5 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center text-lg">
+                                🍕
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900">Dominos Pizza</h4>
+                                <span class="text-xs text-slate-400">Mar 27</span>
+                            </div>
+                        </div>
+                        <div class="text-sm font-black text-slate-900">- $24.50</div>
+                    </div>
+                    
+                    <div class="transaction-item px-6 py-5 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center text-lg">
+                                💰
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900">Salary Payout</h4>
+                                <span class="text-xs text-slate-400">Mar 25</span>
+                            </div>
+                        </div>
+                        <div class="text-sm font-black text-appleBlue">+ $3,250.00</div>
+                    </div>
                 </div>
-            </div>
+            </section>
+
         </main>
+        
+        <footer class="mt-auto py-10 text-center opacity-30 text-[10px] font-bold uppercase tracking-[0.2em]">
+            VibeBank Proof of Concept • v1.0
+        </footer>
     </div>
 
-    <script src="engine.js"></script>
-    <script src="config.js"></script>
+    <!-- Minimal Helper Logic -->
+    <script>
+        // No heavy engine needed for this POC
+    </script>
 </body>
 </html>
