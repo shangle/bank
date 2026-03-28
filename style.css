@@ -1,4 +1,3 @@
-/* VibeBank Core Styles */
 :root {
     --vibeDark: #0B132B;
     --vibeSlate: #1C2541;
@@ -7,7 +6,25 @@
     --vibeAccent: #6FFFE9;
 }
 
-/* Custom Scrollbar for a premium feel */
+/* Custom Utilities to replace Tailwind Arbitrary Values */
+.bg-vibe-glow {
+    background: radial-gradient(circle, var(--vibeBlue) 0%, transparent 70%);
+}
+
+.shadow-vibe-teal {
+    box-shadow: 0 0 15px rgba(91, 192, 190, 0.4);
+}
+
+.shadow-vibe-accent {
+    box-shadow: 0 0 20px rgba(111, 255, 233, 0.3);
+}
+
+.blur-glow {
+    filter: blur(150px);
+    opacity: 0.2;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -16,40 +33,61 @@
 }
 ::-webkit-scrollbar-thumb {
     background: var(--vibeBlue);
-    border-radius: 10px;
+    border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--vibeTeal);
 }
 
-/* Base typography enhancements */
-body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Mavo UI Overrides */
+/* Mavo Overrides */
 [mv-app] .mv-bar.mv-ui {
-    margin-bottom: 1rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
-/* Add a subtle glow to active elements */
-.bg-vibeTeal {
-    box-shadow: 0 0 15px rgba(91, 192, 190, 0.2);
+.mv-bar.mv-ui .mv-button {
+    background: var(--vibeSlate);
+    border: 1px solid var(--vibeBlue);
+    color: white;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
 }
 
-.hover\:scale-105:hover {
-    box-shadow: 0 0 20px rgba(111, 255, 233, 0.3);
+/* Ledger & Status Colors */
+.income { color: var(--vibeTeal); }
+.income::before { content: "+$"; }
+
+.expense { color: #fff; opacity: 0.9; }
+.expense::before { content: "-$"; }
+
+tr.Scheduled td {
+    opacity: 0.5;
 }
 
-/* Smooth transitions for all interactive elements */
-button, input, select, a {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+[property="status"].Scheduled {
+    border-color: var(--vibeTeal);
+    color: var(--vibeTeal);
 }
 
-/* Table styling for better readability on mobile */
-@media (max-width: 640px) {
-    .overflow-x-auto {
-        -webkit-overflow-scrolling: touch;
-    }
+/* Transitions */
+.transition-all-slow {
+    transition: all 2000ms ease-out;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Focus States */
+*:focus-visible {
+    outline: 2px solid var(--vibeAccent);
+    outline-offset: 2px;
 }
