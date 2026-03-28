@@ -1,27 +1,31 @@
 :root {
-    --vibeDark: #0B132B;
-    --vibeSlate: #1C2541;
-    --vibeBlue: #3A506B;
-    --vibeTeal: #5BC0BE;
-    --vibeAccent: #6FFFE9;
+    --vibeWhite: #FFFFFF;
+    --vibeLight: #F5F7FA;
+    --vibeTrustBlue: #0070BA; /* PayPal Blue */
+    --vibeTrustBlueHover: #005EA6;
+    --vibeGrowthGreen: #00C805; /* Robinhood Green */
+    --vibeTextMain: #1E293B;
+    --vibeTextLight: #64748B;
+    --vibeBorder: #E2E8F0;
+    --vibeShadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Custom Utilities to replace Tailwind Arbitrary Values */
+body {
+    background-color: var(--vibeLight);
+    color: var(--vibeTextMain);
+}
+
+/* Custom Utilities for Bright Theme */
 .bg-vibe-glow {
-    background: radial-gradient(circle, var(--vibeBlue) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 112, 186, 0.05) 0%, transparent 70%);
 }
 
-.shadow-vibe-teal {
-    box-shadow: 0 0 15px rgba(91, 192, 190, 0.4);
+.shadow-premium {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }
 
-.shadow-vibe-accent {
-    box-shadow: 0 0 20px rgba(111, 255, 233, 0.3);
-}
-
-.blur-glow {
-    filter: blur(150px);
-    opacity: 0.2;
+.shadow-vibe-trust {
+    box-shadow: 0 0 15px rgba(0, 112, 186, 0.2);
 }
 
 /* Scrollbar */
@@ -29,14 +33,14 @@
     width: 8px;
 }
 ::-webkit-scrollbar-track {
-    background: var(--vibeDark);
+    background: var(--vibeLight);
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--vibeBlue);
+    background: #CBD5E1;
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--vibeTeal);
+    background: var(--vibeTrustBlue);
 }
 
 /* Mavo Overrides */
@@ -48,37 +52,45 @@
 }
 
 .mv-bar.mv-ui .mv-button {
-    background: var(--vibeSlate);
-    border: 1px solid var(--vibeBlue);
-    color: white;
+    background: var(--vibeWhite);
+    border: 1px solid var(--vibeBorder);
+    color: var(--vibeTextMain);
     border-radius: 9999px;
     padding: 0.25rem 0.75rem;
     font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.mv-bar.mv-ui .mv-button:hover {
+    border-color: var(--vibeTrustBlue);
+    color: var(--vibeTrustBlue);
 }
 
 /* Ledger & Status Colors */
-.income { color: var(--vibeTeal); }
+.income { color: var(--vibeGrowthGreen); font-weight: 600; }
 .income::before { content: "+$"; }
 
-.expense { color: #fff; opacity: 0.9; }
+.expense { color: var(--vibeTextMain); }
 .expense::before { content: "-$"; }
 
 tr.Scheduled td {
-    opacity: 0.5;
+    opacity: 0.6;
+    font-style: italic;
 }
 
 [property="status"].Scheduled {
-    border-color: var(--vibeTeal);
-    color: var(--vibeTeal);
+    border-color: var(--vibeTrustBlue);
+    color: var(--vibeTrustBlue);
+    background-color: rgba(0, 112, 186, 0.05);
 }
 
 /* Transitions */
 .transition-all-slow {
-    transition: all 2000ms ease-out;
+    transition: all 2000ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes fadeIn {
@@ -88,6 +100,6 @@ tr.Scheduled td {
 
 /* Focus States */
 *:focus-visible {
-    outline: 2px solid var(--vibeAccent);
+    outline: 2px solid var(--vibeTrustBlue);
     outline-offset: 2px;
 }
