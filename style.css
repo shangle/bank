@@ -14,6 +14,7 @@ body {
     color: var(--text-main);
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     letter-spacing: -0.02em;
+    overflow-x: hidden;
 }
 
 /* Glassmorphism */
@@ -26,21 +27,25 @@ body {
     border-radius: var(--radius-lg);
 }
 
-/* Mavo Safety: Custom Classes for Arbitrary Values */
-.text-xs-bold { font-size: 10px; font-weight: 900; }
-.tracking-tight-vibes { letter-spacing: 0.2em; }
-.sheet-z-index { z-index: 60; }
+/* Utility Classes (Replacing Tailwind Arbitrary Values for Mavo Safety) */
+.text-label { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: #94a3b8; }
+.text-balance-lg { font-size: 4rem; font-weight: 800; letter-spacing: -0.04em; color: #1C1C1E; }
+@media (min-width: 768px) { .text-balance-lg { font-size: 5rem; } }
+
+.z-sheet-backdrop { z-index: 60; }
+.rounded-t-sheet { border-top-left-radius: 40px; border-top-right-radius: 40px; }
 
 /* Interaction Sheets */
 .sheet-backdrop {
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(4px);
-    transition: opacity 0.3s ease;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.4s ease;
 }
 
 .sheet {
-    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
     transform: translateY(100%);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
 }
 
 .sheet.active {
@@ -59,28 +64,27 @@ body {
     transform: scale(1.02);
 }
 
-/* Balance & Typography */
-.balance-text {
-    font-weight: 800;
-    letter-spacing: -0.04em;
+.m3-tonal-btn:active {
+    transform: scale(0.96);
 }
 
-/* Transaction Types */
-.expense { color: #1C1C1E; }
-.income { color: #0061FF; font-weight: 800; }
+/* Transaction Styles */
+.expense-text { color: #1C1C1E; font-weight: 700; }
+.income-text { color: #0061FF; font-weight: 800; }
 
-/* Mavo UI Hiding */
-[mv-app] .mv-bar.mv-ui {
-    display: none !important;
-}
-
-/* Form Styles */
+/* Forms */
 input, select {
     background: #F2F2F7;
     border: none;
-    border-radius: 12px;
-    padding: 12px 16px;
+    border-radius: 16px;
+    padding: 16px;
     font-size: 16px;
     font-weight: 600;
     width: 100%;
+}
+
+input:focus {
+    background: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(0, 97, 255, 0.1);
+    outline: none;
 }

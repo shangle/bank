@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VibeBank | Digital Finance</title>
     
-    <!-- External Dependencies -->
+    <!-- External UI Deps -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js"></script>
     
-    <!-- Mavo Core (Cleaned expressions) -->
+    <!-- Mavo Core (Cleaned expressions for stability) -->
     <link rel="stylesheet" href="https://get.mavo.io/mavo.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://get.mavo.io/mavo.js"></script>
@@ -50,27 +50,27 @@
             </button>
         </header>
 
-        <!-- Main Dashboard Content -->
+        <!-- Main Dashboard -->
         <main class="max-w-4xl mx-auto w-full space-y-8 pb-20">
             
             <!-- Hero Balance Card -->
             <section class="glass-card p-10 flex flex-col items-center text-center">
-                <span class="text-xs-bold uppercase tracking-tight-vibes text-slate-400 mb-2">Total Balance</span>
-                <div class="balance-text text-6xl md:text-7xl text-slate-900 mb-8" property="balance">$4,250.32</div>
+                <span class="text-label mb-2">Total Balance</span>
+                <div class="text-balance-lg text-slate-900 mb-8" property="balance">$4,250.32</div>
                 
                 <!-- Quick Actions -->
                 <div class="flex gap-4 w-full max-w-sm">
                     <button onclick="Mavo.all.vibebank.root.children.activeSheet.setValue('send')" class="m3-tonal-btn flex-1 py-4 rounded-3xl flex flex-col items-center gap-1 group">
                         <svg class="w-5 h-5 transition-transform group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                        <span class="text-xs-bold uppercase tracking-tight-vibes">Send</span>
+                        <span class="text-label text-blue-600">Send</span>
                     </button>
                     <button onclick="Mavo.all.vibebank.root.children.activeSheet.setValue('pay')" class="m3-tonal-btn flex-1 py-4 rounded-3xl flex flex-col items-center gap-1 group">
                         <svg class="w-5 h-5 transition-transform group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                        <span class="text-xs-bold uppercase tracking-tight-vibes">Pay</span>
+                        <span class="text-label text-blue-600">Pay</span>
                     </button>
                     <button onclick="Mavo.all.vibebank.root.children.activeSheet.setValue('request')" class="m3-tonal-btn flex-1 py-4 rounded-3xl flex flex-col items-center gap-1 group">
                         <svg class="w-5 h-5 transition-transform group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                        <span class="text-xs-bold uppercase tracking-tight-vibes">Request</span>
+                        <span class="text-label text-blue-600">Request</span>
                     </button>
                 </div>
             </section>
@@ -93,11 +93,11 @@
                 </div>
             </section>
 
-            <!-- Ledger View (Modern Mavo Syntax) -->
+            <!-- Activity Ledger (Modern Mavo Syntax) -->
             <section class="space-y-4">
                 <div class="flex justify-between items-center px-4">
                     <h2 class="text-lg font-bold text-slate-900">Recent Activity</h2>
-                    <button class="text-xs-bold uppercase text-appleBlue hover:underline tracking-tight-vibes">View All</button>
+                    <button class="text-label text-appleBlue hover:underline">View All</button>
                 </div>
 
                 <div class="glass-card overflow-hidden divide-y divide-slate-50" mv-list property="transactions">
@@ -123,38 +123,38 @@
         <!-- INTERACTION SHEETS -->
         
         <!-- Sheet Backdrop -->
-        <div class="fixed inset-0 sheet-backdrop sheet-z-index flex items-end justify-center pointer-events-none" 
+        <div class="fixed inset-0 sheet-backdrop z-sheet-backdrop flex items-end justify-center pointer-events-none" 
              style="opacity: [if(activeSheet = 'none', 0, 1)]; pointer-events: [if(activeSheet = 'none', 'none', 'auto')]"
              onclick="Mavo.all.vibebank.root.children.activeSheet.setValue('none')">
             
             <!-- Interaction Card (Sheet) -->
-            <div class="sheet glass-card w-full max-w-lg rounded-t-4xl p-8 mb-0 pb-12 shadow-2xl pointer-events-auto [if(activeSheet = 'none', '', 'active')]" onclick="event.stopPropagation()">
+            <div class="sheet glass-card w-full max-w-lg rounded-t-sheet p-8 mb-0 pb-12 shadow-2xl pointer-events-auto [if(activeSheet = 'none', '', 'active')]" onclick="event.stopPropagation()">
                 <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-8 cursor-pointer" onclick="Mavo.all.vibebank.root.children.activeSheet.setValue('none')"></div>
                 
-                <!-- CONTENT: SEND MONEY -->
-                <div mv-if="activeSheet = 'send'" class="space-y-6">
+                <!-- CONTENT: SEND MONEY (Using hidden instead of mv-if to keep inputs in DOM) -->
+                <div hidden="[activeSheet != 'send']" class="space-y-6">
                     <h2 class="text-2xl font-extrabold tracking-tight">Send Money</h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="text-xs-bold uppercase text-slate-400 mb-2 block">Recipient Name</label>
+                            <label class="text-label mb-2 block">Recipient Name</label>
                             <input id="send-to-input" placeholder="e.g. Sarah Smith">
                         </div>
                         <div>
-                            <label class="text-xs-bold uppercase text-slate-400 mb-2 block">Amount</label>
+                            <label class="text-label mb-2 block">Amount</label>
                             <input id="send-amount-input" type="number" placeholder="0.00" class="text-2xl font-black">
                         </div>
                     </div>
-                    <button onclick="window.confirmTransaction('send')" class="w-full bg-appleBlue text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/20 active:scale-95 transition">
-                        Send Payment
+                    <button onclick="window.confirmTransaction('send')" class="w-full bg-appleBlue text-white font-bold py-5 rounded-2xl shadow-lg shadow-blue-500/20 active:scale-95 transition">
+                        Confirm Payment
                     </button>
                 </div>
 
                 <!-- CONTENT: PAY BILL -->
-                <div mv-if="activeSheet = 'pay'" class="space-y-6">
+                <div hidden="[activeSheet != 'pay']" class="space-y-6">
                     <h2 class="text-2xl font-extrabold tracking-tight">Pay a Bill</h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="text-xs-bold uppercase text-slate-400 mb-2 block">Payee</label>
+                            <label class="text-label mb-2 block">Payee</label>
                             <select id="pay-to-input">
                                 <option value="Dominos Pizza">Dominos Pizza</option>
                                 <option value="Netflix">Netflix</option>
@@ -162,19 +162,19 @@
                             </select>
                         </div>
                         <div>
-                            <label class="text-xs-bold uppercase text-slate-400 mb-2 block">Amount</label>
+                            <label class="text-label mb-2 block">Amount</label>
                             <input id="pay-amount-input" type="number" placeholder="0.00" class="text-2xl font-black">
                         </div>
                     </div>
-                    <button onclick="window.confirmTransaction('pay')" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl active:scale-95 transition">
+                    <button onclick="window.confirmTransaction('pay')" class="w-full bg-slate-900 text-white font-bold py-5 rounded-2xl active:scale-95 transition">
                         Confirm Bill Pay
                     </button>
                 </div>
 
                 <!-- CONTENT: PROFILE -->
-                <div mv-if="activeSheet = 'profile'" class="space-y-8">
+                <div hidden="[activeSheet != 'profile']" class="space-y-8">
                     <div class="flex items-center gap-6">
-                        <div class="w-20 h-20 bg-appleBlue rounded-3xl flex items-center justify-center text-white text-3xl font-black">
+                        <div class="w-20 h-20 bg-appleBlue rounded-3xl flex items-center justify-center text-white text-3xl font-black shadow-lg">
                             JA
                         </div>
                         <div>
@@ -184,23 +184,23 @@
                     </div>
                     
                     <div class="space-y-4">
-                        <div class="glass-card p-4 flex justify-between items-center border-slate-100">
+                        <div class="glass-card p-5 flex justify-between items-center border-slate-100">
                             <span class="text-sm font-bold">FaceID Security</span>
-                            <div class="relative inline-block w-10 h-6">
-                                <div class="w-full h-full bg-slate-200 rounded-full"></div>
-                                <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all"></div>
+                            <div class="relative inline-block w-12 h-6">
+                                <div class="w-full h-full bg-green-500 rounded-full"></div>
+                                <div class="absolute right-1 top-1 bg-white w-4 h-4 rounded-full"></div>
                             </div>
                         </div>
                     </div>
                     
-                    <button onclick="Mavo.all.vibebank.root.children.activeSheet.setValue('none')" class="w-full bg-slate-100 text-slate-900 font-bold py-4 rounded-2xl active:scale-95 transition">
-                        Done
+                    <button onclick="Mavo.all.vibebank.root.children.activeSheet.setValue('none')" class="w-full bg-slate-100 text-slate-900 font-bold py-5 rounded-2xl active:scale-95 transition">
+                        Dismiss Settings
                     </button>
                 </div>
             </div>
         </div>
 
-        <footer class="mt-auto py-10 text-center opacity-30 text-xs-bold uppercase tracking-tight-vibes">
+        <footer class="mt-auto py-10 text-center opacity-30 text-label">
             VibeBank POC • Stability Version 1.2
         </footer>
     </div>
