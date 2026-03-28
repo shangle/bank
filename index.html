@@ -3,110 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Banking Simulator</title>
+    <title>VibeBank | The Future of Fictional Finance</title>
+    <!-- Mavo Core -->
     <link rel="stylesheet" href="https://get.mavo.io/mavo.css">
-    <link rel="stylesheet" href="style.css">
     <script src="https://get.mavo.io/mavo.js"></script>
+    
+    <!-- Utilities & Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js"></script>
+
+    <!-- Tailwind Config for VibeBank Aesthetic -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vibeDark: '#0B132B',
+                        vibeSlate: '#1C2541',
+                        vibeBlue: '#3A506B',
+                        vibeTeal: '#5BC0BE',
+                        vibeAccent: '#6FFFE9',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['Playfair Display', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <header>
-        <h1>🏦 Simulator Bank</h1>
-        <div class="mavo-controls" mv-bar="no-login logout"></div>
-    </header>
+<body class="bg-vibeDark text-white font-sans antialiased min-h-screen flex flex-col">
 
-    <main mv-app="bankingSim" 
-          mv-plugins="gsheets" 
-          mv-storage="local"
-          mv-init="data.json">
-        
-        <section id="account-setup" class="card">
-            <h2>Account Setup</h2>
-            <div class="grid">
-                <label>
-                    Account Name
-                    <input property="accountName" placeholder="e.g. Bubba's Checking">
-                </label>
-                <label>
-                    Initial Balance ($)
-                    <input property="initialBalance" type="number" step="0.01" mv-default="1000">
-                </label>
-                <label>
-                    Backfill Start Date
-                    <input property="backfillDate" type="date" mv-default="[dayjs().subtract(30, 'day').format('YYYY-MM-DD')]">
-                </label>
+    <!-- MAVO APP ROOT -->
+    <div mv-app="vibebank" 
+         mv-storage="local" 
+         class="flex-grow flex flex-col">
+
+        <!-- App State (Hidden) -->
+        <span property="currentPage" hidden>landing</span>
+        <span property="onboardingStep" hidden>1</span>
+
+        <!-- ========================================== -->
+        <!-- NAVIGATION / HEADER                        -->
+        <!-- ========================================== -->
+        <nav class="border-b border-vibeBlue bg-vibeDark/90 backdrop-blur-md sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-20 items-center">
+                    <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="Mavo.all.vibebank.root.children.currentPage.value = 'landing'">
+                        <span class="text-3xl font-serif font-bold text-white tracking-tight">Vibe<span class="text-vibeAccent">Bank</span></span>
+                    </div>
+                    
+                    <!-- Landing Page Navigation -->
+                    <div mv-if="currentPage = 'landing'" class="hidden md:flex items-center space-x-8">
+                        <button onclick="Mavo.all.vibebank.root.children.currentPage.value = 'story'" class="text-gray-300 hover:text-white transition">The Vibe Coding Story</button>
+                        <button onclick="Mavo.all.vibebank.root.children.currentPage.value = 'onboarding'; Mavo.all.vibebank.root.children.onboardingStep.value = 1" class="bg-vibeTeal hover:bg-vibeAccent text-vibeDark font-semibold px-6 py-2 rounded-full transition duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(91,192,190,0.5)]">
+                            Open an Account
+                        </button>
+                    </div>
+
+                    <!-- Dashboard Navigation -->
+                    <div mv-if="currentPage = 'dashboard'" class="flex items-center space-x-4">
+                        <div class="mavo-controls text-sm" mv-bar="no-login logout"></div>
+                        <button onclick="Mavo.all.vibebank.root.children.currentPage.value = 'landing'" class="text-gray-400 hover:text-white text-sm">Sign Out</button>
+                    </div>
+                </div>
             </div>
+        </nav>
+
+        <!-- ========================================== -->
+        <!-- PAGE 1: LANDING PAGE                       -->
+        <!-- ========================================== -->
+        <main mv-if="currentPage = 'landing'" class="flex-grow flex flex-col justify-center items-center px-4 py-20 text-center relative overflow-hidden">
+            <!-- Background Glow -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vibeBlue rounded-full blur-[150px] opacity-20 pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-4xl">
+                <div class="inline-block border border-vibeTeal/30 bg-vibeTeal/10 text-vibeAccent px-4 py-1.5 rounded-full text-sm font-medium mb-8">
+                    Built over a weekend. Performance Art as a Service.
+                </div>
+                <h1 class="text-6xl md:text-8xl font-serif font-extrabold mb-6 leading-tight">
+                    Banking, engineered by <br/>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-vibeTeal to-vibeAccent">a vibe.</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+                    Experience the illusion of a robust fintech platform. VibeBank is a high-fidelity performance art piece demonstrating how fast an entire financial system can be "vibe coded".
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="Mavo.all.vibebank.root.children.currentPage.value = 'onboarding'; Mavo.all.vibebank.root.children.onboardingStep.value = 1" class="bg-white text-vibeDark hover:bg-gray-100 font-bold text-lg px-8 py-4 rounded-full transition duration-300 shadow-lg">
+                        Start the Experience
+                    </button>
+                    <button onclick="Mavo.all.vibebank.root.children.currentPage.value = 'story'" class="border border-gray-600 hover:border-gray-400 text-white font-medium text-lg px-8 py-4 rounded-full transition duration-300">
+                        Read the Manifest
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- ========================================== -->
+        <!-- PAGE 2: THE VIBE STORY (Manifesto)         -->
+        <!-- ========================================== -->
+        <main mv-if="currentPage = 'story'" class="flex-grow max-w-3xl mx-auto px-4 py-16">
+            <button onclick="Mavo.all.vibebank.root.children.currentPage.value = 'landing'" class="text-vibeTeal hover:text-vibeAccent mb-8 flex items-center gap-2">
+                ← Back
+            </button>
+            <article class="prose prose-invert lg:prose-xl font-serif">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-white">The Power of Vibe Coding</h1>
+                <p class="text-gray-300 lead">
+                    What if a bank didn't take thousands of engineers and millions of dollars to build? What if it just took a weekend and a vibe?
+                </p>
+                <p class="text-gray-400">
+                    VibeBank is a performance art piece. It is a fully functional, browser-based banking simulator that looks and feels better than many multi-million dollar community bank websites. It was created to show how rapidly high-fidelity, complex logic can be assembled using modern AI tools and simple frameworks like Mavo.
+                </p>
+                <h3 class="text-2xl font-bold text-white mt-8 mb-4">The Architecture of an Illusion</h3>
+                <p class="text-gray-400">
+                    Under the hood, there is no Jack Henry core. There is no mainframe. There is a deeply extensible transaction engine capable of backfilling histories, calculating probabilities, and eventually, managing complex loan amortizations. It is built from the outside in—starting with the presentation layer to ensure everything feels impossibly smooth.
+                </p>
+            </article>
+        </main>
+
+        <!-- ========================================== -->
+        <!-- PAGE 3: ONBOARDING FLOW                    -->
+        <!-- ========================================== -->
+        <main mv-if="currentPage = 'onboarding'" class="flex-grow flex items-center justify-center p-4">
+            <div class="bg-vibeSlate border border-vibeBlue rounded-2xl shadow-2xl p-8 md:p-12 w-full max-w-xl relative">
+                
+                <!-- Step 1: Persona Selection -->
+                <div mv-if="onboardingStep = 1" class="animate-fade-in">
+                    <h2 class="text-3xl font-serif font-bold mb-2">Who are you today?</h2>
+                    <p class="text-gray-400 mb-8">Select a persona to instantly populate your financial history, or start fresh.</p>
+                    
+                    <div class="space-y-3 mb-8">
+                        <button onclick="selectPersona('billionaire')" class="w-full text-left p-4 border border-vibeBlue hover:border-vibeTeal hover:bg-vibeBlue/30 rounded-xl transition flex justify-between items-center group">
+                            <div>
+                                <div class="font-bold text-lg text-white">Billionaire Bubba</div>
+                                <div class="text-sm text-gray-400">High dividends, private jets, and Chick-fil-a.</div>
+                            </div>
+                            <span class="text-vibeTeal opacity-0 group-hover:opacity-100 transition">→</span>
+                        </button>
+                        
+                        <button onclick="selectPersona('deadbeat')" class="w-full text-left p-4 border border-vibeBlue hover:border-vibeTeal hover:bg-vibeBlue/30 rounded-xl transition flex justify-between items-center group">
+                            <div>
+                                <div class="font-bold text-lg text-white">Double-Wide Deadbeat</div>
+                                <div class="text-sm text-gray-400">Overdraft fees, online poker, and gig work.</div>
+                            </div>
+                            <span class="text-vibeTeal opacity-0 group-hover:opacity-100 transition">→</span>
+                        </button>
+
+                        <button onclick="selectPersona('techbro')" class="w-full text-left p-4 border border-vibeBlue hover:border-vibeTeal hover:bg-vibeBlue/30 rounded-xl transition flex justify-between items-center group">
+                            <div>
+                                <div class="font-bold text-lg text-white">The Tech Bro</div>
+                                <div class="text-sm text-gray-400">RSU vests, DoorDash daily, Equinox.</div>
+                            </div>
+                            <span class="text-vibeTeal opacity-0 group-hover:opacity-100 transition">→</span>
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="Mavo.all.vibebank.root.children.onboardingStep.value = 2" class="text-gray-500 hover:text-white text-sm underline decoration-gray-600 underline-offset-4">
+                            Or create a custom account manually
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: "Fake" Verification -->
+                <div mv-if="onboardingStep = 2" class="animate-fade-in text-center py-8" id="verification-step">
+                    <h2 class="text-2xl font-bold mb-6">Verifying Fictional Identity</h2>
+                    
+                    <div class="w-full bg-vibeDark rounded-full h-2.5 mb-4 overflow-hidden border border-vibeBlue">
+                        <div class="bg-vibeTeal h-2.5 rounded-full transition-all duration-[3000ms] ease-out w-0" id="progress-bar"></div>
+                    </div>
+                    
+                    <p class="text-gray-400 text-sm h-6" id="verification-text">Connecting to imaginary credit bureaus...</p>
+                </div>
+
+                <!-- Step 3: Initial Deposit -->
+                <div mv-if="onboardingStep = 3" class="animate-fade-in">
+                    <h2 class="text-3xl font-serif font-bold mb-2">Initial Funding</h2>
+                    <p class="text-gray-400 mb-8">Securely transfer funds from an external account. (Don't worry, it's just a vibe).</p>
+
+                    <div class="mb-8 relative">
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Deposit Amount</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-gray-500">$</span>
+                            <input property="initialBalance" type="number" mv-default="1000" class="w-full bg-vibeDark border border-vibeBlue text-white text-3xl p-4 pl-10 rounded-xl focus:outline-none focus:border-vibeTeal focus:ring-1 focus:ring-vibeTeal transition placeholder-gray-600">
+                        </div>
+                    </div>
+
+                    <button onclick="finishOnboarding()" class="w-full bg-white text-vibeDark hover:bg-gray-100 font-bold text-lg py-4 rounded-xl transition duration-300 shadow-lg flex justify-center items-center">
+                        Initiate Transfer
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- ========================================== -->
+        <!-- PAGE 4: DASHBOARD (Core App)               -->
+        <!-- ========================================== -->
+        <main mv-if="currentPage = 'dashboard'" class="flex-grow w-full max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="persona-selector">
-                <h3>Select Persona</h3>
-                <div class="persona-grid">
-                    <button type="button" onclick="applyPersona('deadbeat')">Double-Wide Deadbeat</button>
-                    <button type="button" onclick="applyPersona('billionaire')">Billionaire Bubba</button>
-                    <button type="button" onclick="applyPersona('student')">Frugal Student</button>
-                    <button type="button" onclick="applyPersona('techbro')">Tech Bro</button>
-                    <button type="button" onclick="applyPersona('teacher')">Retired Teacher</button>
-                    <button type="button" onclick="applyPersona('mlm')">MLM Mom</button>
-                    <button type="button" onclick="applyPersona('nomad')">Digital Nomad</button>
-                    <button type="button" onclick="applyPersona('grinder')">Gig Grinder</button>
-                    <button type="button" onclick="applyPersona('artist')">Starving Artist</button>
-                    <button type="button" onclick="applyPersona('soccer')">Soccer Parent</button>
+            <!-- Sidebar / Controls -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Account Card -->
+                <div class="bg-vibeSlate border border-vibeBlue rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-vibeTeal/10 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"></div>
+                    <h3 class="text-gray-400 font-medium text-sm mb-1 uppercase tracking-wider">Available Balance</h3>
+                    <div class="text-4xl font-bold text-white mb-6 font-serif" property="currentBalance" mv-value="calculateBalance(transactions)">$0.00</div>
+                    
+                    <div class="border-t border-vibeBlue/50 pt-4 mt-2">
+                        <label class="block text-xs text-gray-500 mb-1">Account Name</label>
+                        <input property="accountName" placeholder="Main Checking" class="bg-transparent text-white font-medium focus:outline-none w-full">
+                    </div>
+                </div>
+
+                <!-- Simulation Controls -->
+                <div class="bg-vibeSlate border border-vibeBlue rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-vibeTeal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Engine Configuration
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-1">Backfill Start Date</label>
+                            <input property="backfillDate" type="date" mv-default="[dayjs().subtract(30, 'day').format('YYYY-MM-DD')]" class="w-full bg-vibeDark border border-vibeBlue rounded-lg p-2 text-white focus:outline-none focus:border-vibeTeal text-sm">
+                        </div>
+                        <button onclick="runSimulation()" class="w-full bg-vibeBlue hover:bg-vibeBlue/80 border border-vibeBlue hover:border-vibeTeal text-white font-medium py-2 rounded-lg transition text-sm">
+                            Run Simulation Engine
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Transaction Rules -->
+                <div class="bg-vibeSlate border border-vibeBlue rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-white font-bold mb-4">Financial Genetics</h3>
+                    <div mv-multiple="rule" class="mb-4 bg-vibeDark border border-vibeBlue p-3 rounded-xl">
+                        <input property="ruleDescription" placeholder="Description" class="w-full bg-transparent text-white font-medium border-b border-vibeBlue mb-2 pb-1 focus:outline-none text-sm">
+                        
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <select property="ruleType" class="bg-vibeSlate border border-vibeBlue text-white rounded p-1">
+                                <option value="income">Income (+)</option>
+                                <option value="expense">Expense (-)</option>
+                            </select>
+                            
+                            <input property="ruleAmount" type="number" placeholder="Amt $" class="bg-vibeSlate border border-vibeBlue text-white rounded p-1 w-full">
+                            
+                            <select property="ruleFrequency" class="bg-vibeSlate border border-vibeBlue text-white rounded p-1">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="once">Once</option>
+                            </select>
+                            
+                            <div class="flex items-center">
+                                <input property="ruleVariability" type="number" placeholder="Var %" class="bg-vibeSlate border border-vibeBlue text-white rounded p-1 w-full" title="Variance %">
+                            </div>
+                            
+                            <div class="col-span-2 flex items-center gap-2 mt-1">
+                                <span class="text-gray-500">Prob:</span>
+                                <input property="ruleProbability" type="number" mv-default="100" class="bg-vibeSlate border border-vibeBlue text-white rounded p-1 flex-grow" title="Probability %">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mv-add-rule w-full py-2 border border-dashed border-gray-600 hover:border-vibeTeal text-gray-400 hover:text-vibeTeal rounded-lg text-sm transition">
+                        + Add Core Rule
+                    </button>
                 </div>
             </div>
-        </section>
 
-        <section id="transaction-rules" class="card">
-            <h2>Transaction Rules</h2>
-            <div mv-multiple="rule" class="rule-item">
-                <div class="grid">
-                    <input property="description" placeholder="Description">
-                    <select property="type">
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                    <input property="baseAmount" type="number" step="0.01" placeholder="Amount">
-                    <select property="frequency">
-                        <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="once">Once</option>
-                    </select>
-                    <input property="variance" type="number" placeholder="Variance %" title="Randomness of amount">
-                    <input property="probability" type="number" mv-default="100" placeholder="Prob %" title="Chance of occurrence">
+            <!-- Main Stage: Ledger -->
+            <div class="lg:col-span-2">
+                <div class="bg-vibeSlate border border-vibeBlue rounded-2xl p-6 shadow-xl h-full flex flex-col">
+                    <div class="flex justify-between items-end mb-6 border-b border-vibeBlue pb-4">
+                        <div>
+                            <h2 class="text-2xl font-serif font-bold text-white">General Ledger</h2>
+                            <p class="text-sm text-gray-400 mt-1">Simulated history and future projections.</p>
+                        </div>
+                        <button onclick="downloadCSV()" class="text-sm text-vibeTeal hover:text-vibeAccent hover:underline flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Export
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="py-3 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-vibeBlue">Date</th>
+                                    <th class="py-3 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-vibeBlue">Description</th>
+                                    <th class="py-3 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-vibeBlue text-right">Amount</th>
+                                    <th class="py-3 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-vibeBlue text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody mv-multiple="transactions" mv-list-sort="date desc" class="divide-y divide-vibeBlue/50">
+                                <tr class="group hover:bg-vibeBlue/20 transition [status]">
+                                    <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-300" property="date"></td>
+                                    <td class="py-3 px-4 text-sm font-medium text-white" property="description"></td>
+                                    <td class="py-3 px-4 whitespace-nowrap text-sm text-right font-mono" property="amount" class="[type]"></td>
+                                    <td class="py-3 px-4 whitespace-nowrap text-xs text-center">
+                                        <span property="status" class="px-2 py-1 rounded-full bg-vibeDark border border-vibeBlue text-gray-400"></span>
+                                        <span property="type" hidden></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Empty State -->
+                        <div class="text-center py-16 opacity-50" id="empty-ledger-state" style="display: none;">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <p class="text-gray-400">The ledger is empty. Run the engine.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button class="mv-add-rule">Add Rule</button>
-        </section>
 
-        <section id="summary" class="card">
-            <div class="balance-display">
-                <span class="label">Current Balance:</span>
-                <span class="balance" property="currentBalance" mv-value="calculateBalance(transactions)">$0.00</span>
-            </div>
-            <button type="button" onclick="runSimulation()" class="btn-primary">🔄 Sync & Run Simulation</button>
-        </section>
+        </main>
+    </div>
 
-        <section id="ledger" class="card">
-            <h2>Transaction History</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody mv-multiple="transactions" mv-list-sort="date desc">
-                    <tr class="[status]">
-                        <td property="date"></td>
-                        <td property="description"></td>
-                        <td property="amount" class="[type]"></td>
-                        <td property="status"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
+    <!-- Custom Styles for Utilities not in Tailwind -->
+    <style>
+        /* Mavo Overrides to keep UI clean */
+        .mv-bar.mv-ui { padding: 0; background: transparent; box-shadow: none; border: none; }
+        .mv-bar.mv-ui .mv-button { background: rgba(58, 80, 107, 0.5); border: 1px solid #3A506B; color: white; border-radius: 0.5rem; }
+        .mv-bar.mv-ui .mv-button:hover { background: #3A506B; }
+        
+        /* Ledger Specifics */
+        .income { color: #5BC0BE; }
+        .income::before { content: "+$"; }
+        .expense { color: #fff; opacity: 0.9; }
+        .expense::before { content: "-$"; }
+        
+        tr.Scheduled td { opacity: 0.5; }
+        tr.Scheduled [property="status"] { border-color: #5BC0BE; color: #5BC0BE; }
+        
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 
     <script src="engine.js"></script>
     <script src="config.js"></script>

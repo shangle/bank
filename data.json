@@ -1,16 +1,9 @@
 {
-    "accountName": "New Account",
-    "initialBalance": 1000,
+    "currentPage": "landing",
+    "onboardingStep": 1,
+    "initialBalance": 0,
+    "accountName": "",
     "backfillDate": "2024-03-01",
-    "rule": [
-        {
-            "description": "Initial Balance",
-            "type": "income",
-            "baseAmount": 1000,
-            "frequency": "once",
-            "variance": 0,
-            "probability": 100
-        }
-    ],
+    "rule": [],
     "transactions": []
 }
