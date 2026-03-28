@@ -1,6 +1,6 @@
 /**
  * VibeBank Simulation Engine - "Average Joe" Edition
- * Apple/M3 Design Evolution Logic
+ * Apple/M3 Design Evolution Logic - Final Polish
  */
 
 window.startInstantOnboarding = function() {
@@ -29,11 +29,11 @@ window.finishInstantOnboarding = function() {
     const mavo = Mavo.get("vibebank");
     if (!mavo) return;
     
-    console.log("🚀 Initializing Average Joe Persona...");
+    console.log("🚀 Initializing Account Data...");
     
     try {
         // Core Properties
-        mavo.root.children.accountName.setValue("Main Checking (..4291)");
+        mavo.root.children.accountName.setValue("Checking (..4291)");
         mavo.root.children.initialBalance.setValue(4250.32);
         
         if (mavo.root.children.backfillDate) {
@@ -44,24 +44,28 @@ window.finishInstantOnboarding = function() {
         const rulesList = mavo.root.children.rule;
         if (rulesList) {
             rulesList.clear();
-            const rules = [
-                { ruleDescription: "Bi-Weekly Salary Payout", ruleType: "income", ruleAmount: 3250.00, ruleFrequency: "weekly", ruleVariability: 0, ruleProbability: 50 },
-                { ruleDescription: "IRS Tax Refund", ruleType: "income", ruleAmount: 1200.00, ruleFrequency: "once", ruleVariability: 0, ruleProbability: 100 },
-                { ruleDescription: "Mortgage Payment (Chase)", ruleType: "expense", ruleAmount: 2150.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-                { ruleDescription: "Car Loan (Ford Credit)", ruleType: "expense", ruleAmount: 485.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-                { ruleDescription: "Kroger Groceries", ruleType: "expense", ruleAmount: 150.00, ruleFrequency: "weekly", ruleVariability: 40, ruleProbability: 100 },
-                { ruleDescription: "Amazon Prime", ruleType: "expense", ruleAmount: 85.00, ruleFrequency: "weekly", ruleVariability: 90, ruleProbability: 40 }
+            const defaultRules = [
+                { ruleDescription: "Salary Payout", ruleType: "income", ruleAmount: 3250.00, ruleFrequency: "weekly", ruleVariability: 0 },
+                { ruleDescription: "IRS Refund", ruleType: "income", ruleAmount: 1200.00, ruleFrequency: "once", ruleVariability: 0 },
+                { ruleDescription: "Mortgage (Chase)", ruleType: "expense", ruleAmount: 2150.00, ruleFrequency: "monthly", ruleVariability: 0 },
+                { ruleDescription: "Car Loan (Ford)", ruleType: "expense", ruleAmount: 485.00, ruleFrequency: "monthly", ruleVariability: 0 },
+                { ruleDescription: "Kroger Groceries", ruleType: "expense", ruleAmount: 150.00, ruleFrequency: "weekly", ruleVariability: 40 },
+                { ruleDescription: "Shell Gas", ruleType: "expense", ruleAmount: 45.00, ruleFrequency: "weekly", ruleVariability: 30 },
+                { ruleDescription: "Amazon Prime", ruleType: "expense", ruleAmount: 85.00, ruleFrequency: "weekly", ruleVariability: 90 }
             ];
-            rules.forEach(r => rulesList.add(r));
-            console.log("✅ Rules injected.");
+            
+            // Add rules with slight delay to ensure UI stability
+            defaultRules.forEach((r, i) => {
+                setTimeout(() => rulesList.add(r), i * 10);
+            });
         }
 
         mavo.root.children.currentPage.setValue('dashboard');
         
-        // Initial simulation
-        setTimeout(() => window.runSimulation(), 800);
+        // Initial simulation after dashboard is visible
+        setTimeout(() => window.runSimulation(), 1000);
     } catch (e) {
-        console.error("❌ Onboarding Error:", e);
+        console.error("❌ Initialization Error:", e);
         mavo.root.children.currentPage.setValue('dashboard');
     }
 };
@@ -72,9 +76,10 @@ window.calculateBalance = function(transactions) {
     
     const initial = parseFloat(mavo.root.children.initialBalance.value) || 0;
     
-    // Convert Mavo collection to usable array
-    const txList = transactions || [];
-    const total = txList.reduce((acc, t) => {
+    // Mavo passes the collection proxy; convert to array if possible
+    const txArray = Array.isArray(transactions) ? transactions : [];
+    
+    const total = txArray.reduce((acc, t) => {
         const amt = parseFloat(t.amount) || 0;
         const type = t.type || 'expense';
         return type === 'income' ? acc + amt : acc - amt;
@@ -85,17 +90,20 @@ window.calculateBalance = function(transactions) {
 
 window.runSimulation = function() {
     const mavo = Mavo.get("vibebank");
-    if (!mavo || !mavo.root.children.rule) return;
+    if (!mavo) return;
 
-    console.log("🔄 Running Simulation Engine...");
+    console.log("🔄 Engine running...");
 
-    const rules = (mavo.root.children.rule.children || []).map(r => ({
+    // Get rules from Mavo
+    const rulesNode = mavo.root.children.rule;
+    if (!rulesNode || !rulesNode.children) return;
+
+    const rules = rulesNode.children.map(r => ({
         ruleDescription: r.children.ruleDescription.value,
         ruleType: r.children.ruleType.value,
         ruleAmount: r.children.ruleAmount.value,
         ruleFrequency: r.children.ruleFrequency.value,
-        ruleVariability: r.children.ruleVariability.value,
-        ruleProbability: 100 // Default to 100 for Average Joe
+        ruleVariability: r.children.ruleVariability.value
     }));
 
     const startStr = mavo.root.children.backfillDate.value || dayjs().subtract(30, 'days').format('YYYY-MM-DD');
@@ -105,10 +113,13 @@ window.runSimulation = function() {
     
     const transactionsList = mavo.root.children.transactions;
     if (transactionsList) {
+        // Sort descending by date
         newTransactions.sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix());
+        
         transactionsList.clear();
         newTransactions.forEach(t => transactionsList.add(t));
-        console.log(`✅ Simulation complete. ${newTransactions.length} transactions generated.`);
+        
+        console.log(`✅ ${newTransactions.length} transactions processed.`);
         
         const emptyState = document.getElementById('empty-ledger-state');
         if (emptyState) {
@@ -124,14 +135,7 @@ window.downloadCSV = function() {
     const transactions = mavo.root.children.transactions.children || [];
     let csv = "Date,Description,Amount,Type,Status\n";
     transactions.forEach(t => {
-        const row = [
-            t.children.date.value,
-            `"${t.children.description.value}"`,
-            t.children.amount.value,
-            t.children.type.value,
-            t.children.status.value
-        ];
-        csv += row.join(",") + "\n";
+        csv += `${t.children.date.value},"${t.children.description.value}",${t.children.amount.value},${t.children.type.value},${t.children.status.value}\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -139,7 +143,7 @@ window.downloadCSV = function() {
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'vibebank_history.csv');
+    a.setAttribute('download', 'vibebank_ledger.csv');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -186,9 +190,9 @@ const VibeBankCore = {
     }
 };
 
+// Initial simulation on Mavo load if dashboard is active
 document.addEventListener("mavo:load", (e) => {
-    const mavo = e.mavo;
-    if (mavo.id === "vibebank" && mavo.root.children.currentPage.value === 'dashboard') {
+    if (e.mavo.id === "vibebank" && e.mavo.root.children.currentPage.value === 'dashboard') {
         window.runSimulation();
     }
 });

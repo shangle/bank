@@ -31,7 +31,13 @@
 </head>
 <body class="bg-m3Surface text-slate-900 font-sans antialiased min-h-screen">
 
-    <div mv-app="vibebank" mv-storage="local" class="flex flex-col min-h-screen">
+    <!-- App Root with Toolbar Hidden -->
+    <div mv-app="vibebank" 
+         mv-storage="local" 
+         mv-bar="none"
+         mv-init="data.json"
+         class="flex flex-col min-h-screen">
+        
         <span property="currentPage" hidden>landing</span>
 
         <!-- Apple-Style Nav -->
@@ -45,19 +51,18 @@
                 </div>
                 
                 <div mv-if="currentPage = 'landing'" class="flex gap-6 items-center">
-                    <button onclick="window.startInstantOnboarding()" class="bg-m3Primary text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-spring active:scale-95 shadow-lg shadow-blue-500/20">
+                    <button onclick="startInstantOnboarding()" class="bg-m3Primary text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-spring active:scale-95 shadow-lg shadow-blue-500/20">
                         Get Started
                     </button>
                 </div>
 
                 <div mv-if="currentPage = 'dashboard'" class="flex gap-4 items-center">
-                    <div class="mavo-controls" mv-bar="no-login logout"></div>
-                    <button onclick="window.Mavo.all.vibebank.root.children.currentPage.setValue('landing')" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition">Sign Out</button>
+                    <button onclick="Mavo.all.vibebank.root.children.currentPage.setValue('landing')" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition">Sign Out</button>
                 </div>
             </div>
         </nav>
 
-        <!-- PAGE 1: HERO (Apple Style) -->
+        <!-- PAGE 1: HERO -->
         <main mv-if="currentPage = 'landing'" class="flex-grow flex flex-col items-center justify-center text-center px-6 py-20">
             <div class="animate-slide-up">
                 <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-500">
@@ -67,20 +72,20 @@
                     VibeBank uses synthetic financial genetics to build your entire banking history in seconds. Fast, safe, and entirely fictional.
                 </p>
                 <div class="flex gap-4 justify-center">
-                    <button onclick="window.startInstantOnboarding()" class="bg-m3Primary text-white px-8 py-4 rounded-full font-bold text-lg shadow-2xl shadow-blue-500/20 hover:scale-105 transition-spring">
+                    <button onclick="startInstantOnboarding()" class="bg-m3Primary text-white px-8 py-4 rounded-full font-bold text-lg shadow-2xl shadow-blue-500/20 hover:scale-105 transition-spring">
                         Open Account
                     </button>
                 </div>
             </div>
         </main>
 
-        <!-- PAGE 2: VERIFICATION (M3 Style) -->
+        <!-- PAGE 2: VERIFICATION -->
         <main mv-if="currentPage = 'onboarding'" class="flex-grow flex items-center justify-center p-6">
             <div class="bg-white rounded-4xl p-10 max-w-sm w-full apple-shadow text-center">
                 <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-8">
                     <div class="w-12 h-12 border-4 border-m3Primary border-t-transparent rounded-full animate-spin"></div>
                 </div>
-                <h2 class="text-2xl font-bold mb-2">Verifying Vibe</h2>
+                <h2 class="text-2xl font-bold mb-2 text-slate-900">Verifying Vibe</h2>
                 <p class="text-slate-400 text-sm mb-8" id="verification-text">Syncing with fictional reality...</p>
                 <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                     <div id="progress-bar" class="bg-m3Primary h-full w-0 transition-all-slow"></div>
@@ -88,7 +93,7 @@
             </div>
         </main>
 
-        <!-- PAGE 3: DASHBOARD (Hybrid) -->
+        <!-- PAGE 3: DASHBOARD -->
         <main mv-if="currentPage = 'dashboard'" class="flex-grow max-w-7xl mx-auto w-full p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             <!-- Left: Account & Rules -->
@@ -96,25 +101,25 @@
                 <!-- Account Card -->
                 <div class="bg-white rounded-3xl p-8 apple-shadow border border-white">
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">Account Balance</span>
-                    <div class="text-5xl font-bold tracking-tighter mb-8" property="currentBalance" mv-value="window.calculateBalance(transactions)">$0.00</div>
+                    <div class="text-5xl font-bold tracking-tighter mb-8 text-slate-900" property="currentBalance" mv-value="calculateBalance(transactions)">$0.00</div>
                     
                     <div class="pt-6 border-t border-slate-50">
                         <label class="text-[10px] font-black text-slate-300 uppercase block mb-1">Nickname</label>
-                        <input property="accountName" class="w-full text-lg font-bold focus:outline-none bg-transparent" placeholder="My Checking">
+                        <input property="accountName" class="w-full text-lg font-bold focus:outline-none bg-transparent text-slate-800" placeholder="My Checking">
                     </div>
                 </div>
 
-                <!-- Simulation Info (M3 Container) -->
+                <!-- Simulation Info -->
                 <div class="bg-blue-50 rounded-3xl p-6 border border-blue-100/50">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center apple-shadow">
                             <span class="text-m3Primary">⚙️</span>
                         </div>
-                        <h3 class="font-bold">Engine</h3>
+                        <h3 class="font-bold text-slate-800">Engine</h3>
                     </div>
                     <div class="space-y-4">
-                        <input property="backfillDate" type="date" class="w-full bg-white rounded-xl px-4 py-2 text-sm font-bold border-none apple-shadow focus:ring-2 focus:ring-m3Primary/20">
-                        <button onclick="window.runSimulation()" class="w-full bg-m3Primary text-white py-3 rounded-2xl font-bold text-sm shadow-lg shadow-blue-500/10 active:scale-95 transition-spring">
+                        <input property="backfillDate" type="date" class="w-full bg-white rounded-xl px-4 py-2 text-sm font-bold border-none apple-shadow focus:ring-2 focus:ring-m3Primary/20 text-slate-700">
+                        <button onclick="runSimulation()" class="w-full bg-m3Primary text-white py-3 rounded-2xl font-bold text-sm shadow-lg shadow-blue-500/10 active:scale-95 transition-spring">
                             Refresh History
                         </button>
                     </div>
@@ -122,25 +127,25 @@
 
                 <!-- Rules -->
                 <div class="space-y-4">
-                    <h3 class="text-xs font-black text-slate-400 uppercase px-4">Financial Rules</h3>
+                    <h3 class="text-xs font-black text-slate-400 uppercase px-4 tracking-widest">Financial Rules</h3>
                     <div mv-multiple="rule" class="bg-white rounded-2xl p-4 apple-shadow border border-white mb-3">
-                        <input property="ruleDescription" class="w-full font-bold text-sm border-b border-slate-50 mb-3 focus:outline-none" placeholder="Rule Name">
+                        <input property="ruleDescription" class="w-full font-bold text-sm border-b border-slate-50 mb-3 focus:outline-none text-slate-800" placeholder="Rule Name">
                         <div class="grid grid-cols-2 gap-2">
-                            <select property="ruleType" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase">
+                            <select property="ruleType" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase text-slate-600">
                                 <option value="income">Income</option>
                                 <option value="expense">Expense</option>
                             </select>
-                            <input property="ruleAmount" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold" placeholder="$">
-                            <select property="ruleFrequency" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase">
+                            <input property="ruleAmount" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold text-slate-700" placeholder="$">
+                            <select property="ruleFrequency" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase text-slate-600">
                                 <option value="daily">Daily</option>
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly">Monthly</option>
                                 <option value="once">Once</option>
                             </select>
-                            <input property="ruleVariability" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold" placeholder="Var %">
+                            <input property="ruleVariability" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold text-slate-700" placeholder="Var %">
                         </div>
                     </div>
-                    <button class="mv-add-rule w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold text-xs hover:border-m3Primary hover:text-m3Primary transition-all">
+                    <button class="mv-add-rule w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold text-xs hover:border-m3Primary hover:text-m3Primary transition-all uppercase tracking-tighter">
                         + New Core Rule
                     </button>
                 </div>
@@ -150,8 +155,8 @@
             <div class="lg:col-span-8">
                 <div class="bg-white rounded-4xl p-8 apple-shadow border border-white min-h-full">
                     <div class="flex justify-between items-center mb-10">
-                        <h2 class="text-2xl font-bold tracking-tight">Ledger</h2>
-                        <button onclick="window.downloadCSV()" class="text-xs font-black text-m3Primary uppercase tracking-tighter hover:underline">Export CSV</button>
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Ledger</h2>
+                        <button onclick="downloadCSV()" class="text-xs font-black text-m3Primary uppercase tracking-tighter hover:underline">Export CSV</button>
                     </div>
 
                     <div class="overflow-hidden">
@@ -163,8 +168,8 @@
                                     <th class="pb-4 px-2 text-right">Amount</th>
                                 </tr>
                             </thead>
-                            <tbody mv-multiple="transactions" class="divide-y divide-slate-50">
-                                <tr class="group transition-all hover:bg-slate-50 [status]">
+                            <tbody class="divide-y divide-slate-50">
+                                <tr mv-multiple="transactions" class="group transition-all hover:bg-slate-50 [status]">
                                     <td class="py-4 px-2 text-xs font-bold text-slate-400" property="date"></td>
                                     <td class="py-4 px-2 text-sm font-bold text-slate-800" property="description"></td>
                                     <td class="py-4 px-2 text-sm text-right font-black" property="amount" class="[type]"></td>
@@ -176,7 +181,7 @@
                         
                         <div id="empty-ledger-state" style="display:none;" class="py-20 text-center opacity-20">
                             <div class="text-4xl mb-2">🧊</div>
-                            <p class="font-bold">Ledger is frozen. Run engine.</p>
+                            <p class="font-bold text-slate-900">Ledger is frozen. Run engine.</p>
                         </div>
                     </div>
                 </div>
