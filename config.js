@@ -24,7 +24,7 @@ const CONFIG = {
 // Apply configuration to Mavo app on load
 document.addEventListener("mavo:load", (e) => {
     const mavo = e.mavo;
-    if (mavo.id === "bankingSim") {
+    if (mavo.id === "vibebank") {
         if (CONFIG.googleSheetUrl) {
             mavo.storage = Mavo.Storage.create(mavo, CONFIG.googleSheetUrl);
         } else if (CONFIG.storage !== 'local') {

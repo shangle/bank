@@ -1,187 +1,180 @@
 /**
- * VibeBank Simulation Engine
+ * VibeBank Simulation Engine - "Average Joe" Edition
  * Core logic for backfilling, projecting, and handling UI transitions.
  */
 
-const PERSONAS = {
-    deadbeat: {
-        accountName: "Lucky's Wallet",
-        initialBalance: 50,
-        rules: [
-            { ruleDescription: "Disability Check", ruleType: "income", ruleAmount: 850, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-            { ruleDescription: "Online Poker", ruleType: "expense", ruleAmount: 100, ruleFrequency: "daily", ruleVariability: 80, ruleProbability: 40 },
-            { ruleDescription: "Rent (Double-Wide)", ruleType: "expense", ruleAmount: 450, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-            { ruleDescription: "Gas Station Sushi", ruleType: "expense", ruleAmount: 12, ruleFrequency: "daily", ruleVariability: 50, ruleProbability: 70 },
-            { ruleDescription: "Pawn Shop Payday", ruleType: "income", ruleAmount: 200, ruleFrequency: "weekly", ruleVariability: 90, ruleProbability: 20 },
-            { ruleDescription: "Overdraft Fee", ruleType: "expense", ruleAmount: 35, ruleFrequency: "daily", ruleVariability: 0, ruleProbability: 15 }
-        ]
+const DEFAULT_PERSONA = {
+    accountName: "Main Checking (..4291)",
+    initialBalance: 4250.32,
+    rules: [
+        // Income
+        { ruleDescription: "Bi-Weekly Salary Payout", ruleType: "income", ruleAmount: 3250.00, ruleFrequency: "weekly", ruleVariability: 0, ruleProbability: 50 },
+        { ruleDescription: "IRS Tax Refund", ruleType: "income", ruleAmount: 1200.00, ruleFrequency: "once", ruleVariability: 0, ruleProbability: 100 },
+        
+        // Fixed Expenses
+        { ruleDescription: "Mortgage Payment (Chase)", ruleType: "expense", ruleAmount: 2150.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
+        { ruleDescription: "Car Loan (Ford Credit)", ruleType: "expense", ruleAmount: 485.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
+        { ruleDescription: "State Farm Insurance", ruleType: "expense", ruleAmount: 185.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
+        { ruleDescription: "Verizon Wireless", ruleType: "expense", ruleAmount: 142.50, ruleFrequency: "monthly", ruleVariability: 5, ruleProbability: 100 },
+        { ruleDescription: "Netflix / Spotify Bundle", ruleType: "expense", ruleAmount: 35.99, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
+        
+        // Variable Expenses
+        { ruleDescription: "Kroger Groceries", ruleType: "expense", ruleAmount: 150.00, ruleFrequency: "weekly", ruleVariability: 40, ruleProbability: 100 },
+        { ruleDescription: "Shell Gas Station", ruleType: "expense", ruleAmount: 45.00, ruleFrequency: "weekly", ruleVariability: 30, ruleProbability: 80 },
+        { ruleDescription: "Starbucks Coffee", ruleType: "expense", ruleAmount: 7.50, ruleFrequency: "daily", ruleVariability: 20, ruleProbability: 60 },
+        { ruleDescription: "Amazon Prime Purchase", ruleType: "expense", ruleAmount: 85.00, ruleFrequency: "weekly", ruleVariability: 90, ruleProbability: 40 },
+        { ruleDescription: "Home Depot Project", ruleType: "expense", ruleAmount: 250.00, ruleFrequency: "monthly", ruleVariability: 80, ruleProbability: 30 }
+    ]
+};
+
+const VibeBankCore = {
+    calculateBalance: function(transactions, initialBalance = 0) {
+        if (!transactions || !Array.isArray(transactions)) return initialBalance;
+        return transactions.reduce((acc, t) => {
+            const amt = parseFloat(t.amount) || 0;
+            return t.type === 'income' ? acc + amt : acc - amt;
+        }, initialBalance);
     },
-    billionaire: {
-        accountName: "Bubba's Trust",
-        initialBalance: 50000000,
-        rules: [
-            { ruleDescription: "Oil Dividends", ruleType: "income", ruleAmount: 2500000, ruleFrequency: "monthly", ruleVariability: 20, ruleProbability: 100 },
-            { ruleDescription: "Chick-fil-a Catering", ruleType: "expense", ruleAmount: 12000, ruleFrequency: "daily", ruleVariability: 50, ruleProbability: 60 },
-            { ruleDescription: "Southern Baptist Tithe", ruleType: "expense", ruleAmount: 250000, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-            { ruleDescription: "Yacht Maintenance", ruleType: "expense", ruleAmount: 75000, ruleFrequency: "monthly", ruleVariability: 30, ruleProbability: 100 },
-            { ruleDescription: "Private Jet Fuel", ruleType: "expense", ruleAmount: 45000, ruleFrequency: "weekly", ruleVariability: 50, ruleProbability: 80 }
-        ]
+
+    formatCurrency: function(amount) {
+        return new Intl.NumberFormat('en-US', { 
+            style: 'currency', 
+            currency: 'USD'
+        }).format(amount);
     },
-    techbro: {
-        accountName: "Alpha Capital",
-        initialBalance: 150000,
-        rules: [
-            { ruleDescription: "FAANG Salary", ruleType: "income", ruleAmount: 8500, ruleFrequency: "weekly", ruleVariability: 0, ruleProbability: 50 },
-            { ruleDescription: "RSU Vest", ruleType: "income", ruleAmount: 45000, ruleFrequency: "monthly", ruleVariability: 10, ruleProbability: 25 },
-            { ruleDescription: "DoorDash", ruleType: "expense", ruleAmount: 120, ruleFrequency: "daily", ruleVariability: 30, ruleProbability: 100 },
-            { ruleDescription: "Equinox Membership", ruleType: "expense", ruleAmount: 350, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-            { ruleDescription: "Crypto Dip Buying", ruleType: "expense", ruleAmount: 5000, ruleFrequency: "daily", ruleVariability: 90, ruleProbability: 15 },
-            { ruleDescription: "SF Micro-Studio Rent", ruleType: "expense", ruleAmount: 4200, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 }
-        ]
+
+    generateTransactions: function(rules, startDateStr, endDateStr) {
+        const start = dayjs(startDateStr).startOf('day');
+        const end = dayjs(endDateStr).endOf('day');
+        const today = dayjs().startOf('day');
+        const transactions = [];
+
+        let current = start;
+        while (current.isBefore(end) || current.isSame(end, 'day')) {
+            rules.forEach(rule => {
+                const prob = parseFloat(rule.ruleProbability) || 100;
+                if (Math.random() * 100 > prob) return;
+
+                const freq = rule.ruleFrequency || 'daily';
+                let shouldOccur = false;
+
+                if (freq === 'daily') shouldOccur = true;
+                else if (freq === 'weekly' && current.day() === 1) shouldOccur = true;
+                else if (freq === 'monthly' && current.date() === 1) shouldOccur = true;
+                else if (freq === 'once' && current.isSame(start, 'day')) shouldOccur = true;
+
+                if (shouldOccur) {
+                    const base = parseFloat(rule.ruleAmount) || 0;
+                    const variance = parseFloat(rule.ruleVariability) || 0;
+                    const randomVar = (Math.random() * 2 - 1) * (variance / 100) * base;
+                    const finalAmount = Math.max(0, base + randomVar);
+
+                    transactions.push({
+                        date: current.format('YYYY-MM-DD'),
+                        description: rule.ruleDescription,
+                        type: rule.ruleType || 'expense',
+                        amount: finalAmount.toFixed(2),
+                        status: current.isAfter(today) ? "Scheduled" : "Cleared"
+                    });
+                }
+            });
+            current = current.add(1, 'day');
+        }
+        return transactions;
     }
 };
 
-let selectedPersonaKey = null;
-
-// The "Performance Art" Verification Flow
-function selectPersona(key) {
-    selectedPersonaKey = key;
+function startInstantOnboarding() {
     const mavo = Mavo.get("vibebank");
+    if (!mavo) return;
     
-    // Move to step 2 (Verification)
-    mavo.root.children.onboardingStep.value = 2;
+    // Switch to onboarding page
+    mavo.root.children.currentPage.setValue('onboarding');
     
-    // Simulate complex background checks
-    setTimeout(() => {
-        document.getElementById('progress-bar').style.width = '30%';
-        document.getElementById('verification-text').innerText = 'Analyzing fictional credit score...';
-    }, 100);
+    const updateProgress = (pct, text) => {
+        const progressBar = document.getElementById('progress-bar');
+        const verificationText = document.getElementById('verification-text');
+        if (progressBar) progressBar.style.width = `${pct}%`;
+        if (verificationText) verificationText.innerText = text;
+    };
+
+    // Performance Art Verification Sequence
+    setTimeout(() => updateProgress(30, 'Analyzing credit history...'), 300);
+    setTimeout(() => updateProgress(65, 'Decrypting financial genetics...'), 1000);
+    setTimeout(() => updateProgress(100, 'Identity verified. Opening ledger...'), 1800);
 
     setTimeout(() => {
-        document.getElementById('progress-bar').style.width = '70%';
-        document.getElementById('verification-text').innerText = 'Validating non-existent identity documents...';
-    }, 1500);
-
-    setTimeout(() => {
-        document.getElementById('progress-bar').style.width = '100%';
-        document.getElementById('verification-text').innerText = 'Identity secured. Preparing account...';
-    }, 2500);
-
-    setTimeout(() => {
-        // Move to step 3 (Initial Deposit)
-        mavo.root.children.onboardingStep.value = 3;
-        
-        // Pre-fill initial balance based on persona
-        if (PERSONAS[key]) {
-            mavo.root.children.initialBalance.value = PERSONAS[key].initialBalance;
-        }
-    }, 3500);
+        finishInstantOnboarding();
+    }, 2200);
 }
 
-function finishOnboarding() {
+function finishInstantOnboarding() {
     const mavo = Mavo.get("vibebank");
+    if (!mavo) return;
     
-    if (selectedPersonaKey && PERSONAS[selectedPersonaKey]) {
-        const persona = PERSONAS[selectedPersonaKey];
-        mavo.root.children.accountName.value = persona.accountName;
+    try {
+        // Set Default Data
+        mavo.root.children.accountName.setValue(DEFAULT_PERSONA.accountName);
+        mavo.root.children.initialBalance.setValue(DEFAULT_PERSONA.initialBalance);
         
         const rulesList = mavo.root.children.rule;
-        rulesList.clear();
-        
-        // Add rules sequentially
-        persona.rules.forEach(r => {
-            const newItem = rulesList.add();
-            // Need small delay for Mavo to render the new item before setting values
-            setTimeout(() => {
-                if(newItem.children.ruleDescription) newItem.children.ruleDescription.value = r.ruleDescription;
-                if(newItem.children.ruleType) newItem.children.ruleType.value = r.ruleType;
-                if(newItem.children.ruleAmount) newItem.children.ruleAmount.value = r.ruleAmount;
-                if(newItem.children.ruleFrequency) newItem.children.ruleFrequency.value = r.ruleFrequency;
-                if(newItem.children.ruleVariability) newItem.children.ruleVariability.value = r.ruleVariability;
-                if(newItem.children.ruleProbability) newItem.children.ruleProbability.value = r.ruleProbability;
-            }, 50);
-        });
-    }
+        if (rulesList) {
+            rulesList.clear();
+            DEFAULT_PERSONA.rules.forEach(r => rulesList.add(r));
+        }
 
-    // Go to dashboard
-    mavo.root.children.currentPage.value = 'dashboard';
-    
-    // Run simulation automatically
-    setTimeout(() => runSimulation(), 500);
+        // Switch to Dashboard
+        mavo.root.children.currentPage.setValue('dashboard');
+        
+        // Run simulation
+        setTimeout(() => runSimulation(), 500);
+    } catch (e) {
+        console.error("Error in finishInstantOnboarding:", e);
+        mavo.root.children.currentPage.setValue('dashboard');
+    }
 }
 
 function calculateBalance(transactions) {
-    if (!transactions || transactions.length === 0) return "$0.00";
-    
     const mavo = Mavo.get("vibebank");
-    if(!mavo) return "$0.00";
+    const initial = mavo ? parseFloat(mavo.root.children.initialBalance.value) || 0 : 0;
     
-    let initial = 0;
-    try {
-        initial = parseFloat(mavo.root.children.initialBalance.value) || 0;
-    } catch(e) {}
-    
-    const total = transactions.reduce((acc, t) => {
-        const amt = parseFloat(t.amount) || 0;
-        return t.type === 'income' ? acc + amt : acc - amt;
-    }, initial);
+    const txArray = (transactions || []).map(t => ({
+        amount: typeof t.amount === 'object' ? t.amount.value : t.amount,
+        type: typeof t.type === 'object' ? t.type.value : t.type
+    }));
 
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
+    const balance = VibeBankCore.calculateBalance(txArray, initial);
+    return VibeBankCore.formatCurrency(balance);
 }
 
 function runSimulation() {
     const mavo = Mavo.get("vibebank");
-    if (!mavo || !mavo.root.children.rule || !mavo.root.children.rule.children) return;
+    if (!mavo || !mavo.root.children.rule) return;
 
-    const rules = mavo.root.children.rule.children;
+    const rules = (mavo.root.children.rule.children || []).map(r => ({
+        ruleDescription: r.children.ruleDescription.value,
+        ruleType: r.children.ruleType.value,
+        ruleAmount: r.children.ruleAmount.value,
+        ruleFrequency: r.children.ruleFrequency.value,
+        ruleVariability: r.children.ruleVariability.value,
+        ruleProbability: r.children.ruleProbability.value
+    }));
+
     const startStr = mavo.root.children.backfillDate.value || dayjs().subtract(30, 'days').format('YYYY-MM-DD');
+    const endStr = dayjs().add(30, 'days').format('YYYY-MM-DD');
     
-    let startDate = dayjs(startStr);
-    const endDate = dayjs().add(30, 'days');
-    const newTransactions = [];
-
-    let currentDate = startDate;
-    while (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
-        rules.forEach(ruleData => {
-            if(!ruleData.children) return;
-            const rule = ruleData.children;
-            
-            // Skip empty rules
-            if(!rule.ruleDescription || !rule.ruleDescription.value) return;
-
-            const prob = parseFloat(rule.ruleProbability ? rule.ruleProbability.value : 100) || 100;
-            if (Math.random() * 100 > prob) return;
-
-            const freq = rule.ruleFrequency ? rule.ruleFrequency.value : 'daily';
-            let shouldOccur = false;
-
-            if (freq === 'daily') shouldOccur = true;
-            else if (freq === 'weekly' && currentDate.day() === 1) shouldOccur = true;
-            else if (freq === 'monthly' && currentDate.date() === 1) shouldOccur = true;
-            else if (freq === 'once' && currentDate.isSame(startDate, 'day')) shouldOccur = true;
-
-            if (shouldOccur) {
-                const base = parseFloat(rule.ruleAmount ? rule.ruleAmount.value : 0) || 0;
-                const variance = parseFloat(rule.ruleVariability ? rule.ruleVariability.value : 0) || 0;
-                const randomVar = (Math.random() * 2 - 1) * (variance / 100) * base;
-                const finalAmount = Math.max(0, base + randomVar);
-
-                newTransactions.push({
-                    date: currentDate.format('YYYY-MM-DD'),
-                    description: rule.ruleDescription.value,
-                    type: rule.ruleType ? rule.ruleType.value : 'expense',
-                    amount: finalAmount.toFixed(2),
-                    status: currentDate.isAfter(dayjs()) ? "Scheduled" : "Cleared"
-                });
-            }
-        });
-        currentDate = currentDate.add(1, 'day');
-    }
-
+    const newTransactions = VibeBankCore.generateTransactions(rules, startStr, endStr);
+    
     const transactionsList = mavo.root.children.transactions;
-    if(transactionsList) {
+    if (transactionsList) {
+        newTransactions.sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix());
         transactionsList.clear();
         newTransactions.forEach(t => transactionsList.add(t));
+        
+        const emptyState = document.getElementById('empty-ledger-state');
+        if (emptyState) {
+            emptyState.style.display = newTransactions.length === 0 ? 'block' : 'none';
+        }
     }
 }
 
@@ -189,11 +182,9 @@ function downloadCSV() {
     const mavo = Mavo.get("vibebank");
     if (!mavo || !mavo.root.children.transactions) return;
     
-    const transactions = mavo.root.children.transactions.children;
-    
+    const transactions = mavo.root.children.transactions.children || [];
     let csv = "Date,Description,Amount,Type,Status\n";
     transactions.forEach(t => {
-        if(!t.children) return;
         const row = [
             t.children.date ? t.children.date.value : '',
             `"${t.children.description ? t.children.description.value : ''}"`,
