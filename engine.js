@@ -45,6 +45,62 @@ const PERSONAS = {
             { description: "Ramen Bulk Pack", type: "expense", baseAmount: 25, frequency: "weekly", variance: 10, probability: 100 },
             { description: "Shared House Rent", type: "expense", baseAmount: 900, frequency: "monthly", variance: 0, probability: 100 }
         ]
+    },
+    mlm: {
+        accountName: "Boss Babe Bank",
+        initialBalance: 1200,
+        rules: [
+            { description: "Husband's Salary", type: "income", baseAmount: 5000, frequency: "monthly", variance: 0, probability: 100 },
+            { description: "Essential Oil Commission", type: "income", baseAmount: 45, frequency: "monthly", variance: 90, probability: 30 },
+            { description: "Inventory Restock", type: "expense", baseAmount: 499, frequency: "monthly", variance: 0, probability: 100 },
+            { description: "Target Haul", type: "expense", baseAmount: 250, frequency: "weekly", variance: 40, probability: 80 },
+            { description: "Recruiting Coffee", type: "expense", baseAmount: 15, frequency: "daily", variance: 20, probability: 40 }
+        ]
+    },
+    nomad: {
+        accountName: "Global Wallet",
+        initialBalance: 8500,
+        rules: [
+            { description: "Freelance USD", type: "income", baseAmount: 2500, frequency: "weekly", variance: 50, probability: 60 },
+            { description: "Airbnb (Bali/Medellin)", type: "expense", baseAmount: 1200, frequency: "monthly", variance: 30, probability: 100 },
+            { description: "Flight to Next Hub", type: "expense", baseAmount: 650, frequency: "monthly", variance: 80, probability: 100 },
+            { description: "Coworking Space", type: "expense", baseAmount: 200, frequency: "monthly", variance: 0, probability: 100 },
+            { description: "Local Street Food", type: "expense", baseAmount: 5, frequency: "daily", variance: 50, probability: 100 }
+        ]
+    },
+    grinder: {
+        accountName: "Hustle Hard",
+        initialBalance: 400,
+        rules: [
+            { description: "Uber/DoorDash Payout", type: "income", baseAmount: 180, frequency: "daily", variance: 40, probability: 90 },
+            { description: "Gas Station Fill-up", type: "expense", baseAmount: 45, frequency: "daily", variance: 10, probability: 100 },
+            { description: "Emergency Tire Repair", type: "expense", baseAmount: 150, frequency: "monthly", variance: 50, probability: 20 },
+            { description: "Quick Energy Drink", type: "expense", baseAmount: 4.50, frequency: "daily", variance: 0, probability: 100 },
+            { description: "Phone Data Overages", type: "expense", baseAmount: 30, frequency: "monthly", variance: 0, probability: 50 }
+        ]
+    },
+    artist: {
+        accountName: "Creative Soul",
+        initialBalance: 600,
+        rules: [
+            { description: "Waitressing Tips", type: "income", baseAmount: 400, frequency: "weekly", variance: 30, probability: 100 },
+            { description: "Canvas Sale", type: "income", baseAmount: 1500, frequency: "monthly", variance: 80, probability: 10 },
+            { description: "Expensive Oil Paints", type: "expense", baseAmount: 250, frequency: "monthly", variance: 50, probability: 60 },
+            { description: "Thrift Store Finds", type: "expense", baseAmount: 45, frequency: "weekly", variance: 70, probability: 80 },
+            { description: "Loft Studio Rent", type: "expense", baseAmount: 1100, frequency: "monthly", variance: 0, probability: 100 }
+        ]
+    },
+    soccer: {
+        accountName: "Family Operational",
+        initialBalance: 12500,
+        rules: [
+            { description: "Dual Bi-weekly Salary", type: "income", baseAmount: 6500, frequency: "weekly", variance: 0, probability: 50 },
+            { description: "Costco Megarun", type: "expense", baseAmount: 650, frequency: "weekly", variance: 20, probability: 100 },
+            { description: "Soccer/Gymnastics Fees", type: "expense", baseAmount: 1200, frequency: "monthly", variance: 0, probability: 100 },
+            { description: "SUV Lease Payment", type: "expense", baseAmount: 750, frequency: "monthly", variance: 0, probability: 100 },
+            { description: "Home Mortgage", type: "expense", baseAmount: 3200, frequency: "monthly", variance: 0, probability: 100 },
+            { description: "Amazon Prime Impulses", type: "expense", baseAmount: 85, frequency: "daily", variance: 90, probability: 30 }
+        ]
     }
     // More personas can be added here following the same structure
 };
