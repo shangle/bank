@@ -1,14 +1,12 @@
 /**
  * VibeBank Simulation Engine - "Average Joe" Edition
- * Core logic for backfilling, projecting, and handling UI transitions.
+ * Apple/M3 Design Evolution Logic
  */
 
-// Define global functions on window to ensure they are accessible from HTML onclick handlers
 window.startInstantOnboarding = function() {
     const mavo = Mavo.get("vibebank");
     if (!mavo) return;
     
-    // Switch to onboarding page
     mavo.root.children.currentPage.setValue('onboarding');
     
     const updateProgress = (pct, text) => {
@@ -18,63 +16,78 @@ window.startInstantOnboarding = function() {
         if (verificationText) verificationText.innerText = text;
     };
 
-    // Performance Art Verification Sequence
-    setTimeout(() => updateProgress(30, 'Analyzing credit history...'), 300);
-    setTimeout(() => updateProgress(65, 'Decrypting financial genetics...'), 1000);
-    setTimeout(() => updateProgress(100, 'Identity verified. Opening ledger...'), 1800);
+    setTimeout(() => updateProgress(35, 'Scanning financial DNA...'), 400);
+    setTimeout(() => updateProgress(70, 'Mapping synthetic history...'), 1200);
+    setTimeout(() => updateProgress(100, 'Reality established.'), 2000);
 
     setTimeout(() => {
-        finishInstantOnboarding();
-    }, 2200);
+        window.finishInstantOnboarding();
+    }, 2500);
 };
 
 window.finishInstantOnboarding = function() {
     const mavo = Mavo.get("vibebank");
     if (!mavo) return;
     
+    console.log("🚀 Initializing Average Joe Persona...");
+    
     try {
-        // Set Default Data
-        mavo.root.children.accountName.setValue(DEFAULT_PERSONA.accountName);
-        mavo.root.children.initialBalance.setValue(DEFAULT_PERSONA.initialBalance);
+        // Core Properties
+        mavo.root.children.accountName.setValue("Main Checking (..4291)");
+        mavo.root.children.initialBalance.setValue(4250.32);
         
-        // Set default backfill date
         if (mavo.root.children.backfillDate) {
             mavo.root.children.backfillDate.setValue(dayjs().subtract(30, 'days').format('YYYY-MM-DD'));
         }
         
+        // Populate Rules
         const rulesList = mavo.root.children.rule;
         if (rulesList) {
             rulesList.clear();
-            DEFAULT_PERSONA.rules.forEach(r => rulesList.add(r));
+            const rules = [
+                { ruleDescription: "Bi-Weekly Salary Payout", ruleType: "income", ruleAmount: 3250.00, ruleFrequency: "weekly", ruleVariability: 0, ruleProbability: 50 },
+                { ruleDescription: "IRS Tax Refund", ruleType: "income", ruleAmount: 1200.00, ruleFrequency: "once", ruleVariability: 0, ruleProbability: 100 },
+                { ruleDescription: "Mortgage Payment (Chase)", ruleType: "expense", ruleAmount: 2150.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
+                { ruleDescription: "Car Loan (Ford Credit)", ruleType: "expense", ruleAmount: 485.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
+                { ruleDescription: "Kroger Groceries", ruleType: "expense", ruleAmount: 150.00, ruleFrequency: "weekly", ruleVariability: 40, ruleProbability: 100 },
+                { ruleDescription: "Amazon Prime", ruleType: "expense", ruleAmount: 85.00, ruleFrequency: "weekly", ruleVariability: 90, ruleProbability: 40 }
+            ];
+            rules.forEach(r => rulesList.add(r));
+            console.log("✅ Rules injected.");
         }
 
-        // Switch to Dashboard
         mavo.root.children.currentPage.setValue('dashboard');
         
-        // Run simulation
-        setTimeout(() => window.runSimulation(), 500);
+        // Initial simulation
+        setTimeout(() => window.runSimulation(), 800);
     } catch (e) {
-        console.error("Error in finishInstantOnboarding:", e);
+        console.error("❌ Onboarding Error:", e);
         mavo.root.children.currentPage.setValue('dashboard');
     }
 };
 
 window.calculateBalance = function(transactions) {
     const mavo = Mavo.get("vibebank");
-    const initial = mavo ? parseFloat(mavo.root.children.initialBalance.value) || 0 : 0;
+    if (!mavo) return "$0.00";
     
-    const txArray = (transactions || []).map(t => ({
-        amount: typeof t.amount === 'object' ? t.amount.value : t.amount,
-        type: typeof t.type === 'object' ? t.type.value : t.type
-    }));
+    const initial = parseFloat(mavo.root.children.initialBalance.value) || 0;
+    
+    // Convert Mavo collection to usable array
+    const txList = transactions || [];
+    const total = txList.reduce((acc, t) => {
+        const amt = parseFloat(t.amount) || 0;
+        const type = t.type || 'expense';
+        return type === 'income' ? acc + amt : acc - amt;
+    }, initial);
 
-    const balance = VibeBankCore.calculateBalance(txArray, initial);
-    return VibeBankCore.formatCurrency(balance);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
 };
 
 window.runSimulation = function() {
     const mavo = Mavo.get("vibebank");
     if (!mavo || !mavo.root.children.rule) return;
+
+    console.log("🔄 Running Simulation Engine...");
 
     const rules = (mavo.root.children.rule.children || []).map(r => ({
         ruleDescription: r.children.ruleDescription.value,
@@ -82,7 +95,7 @@ window.runSimulation = function() {
         ruleAmount: r.children.ruleAmount.value,
         ruleFrequency: r.children.ruleFrequency.value,
         ruleVariability: r.children.ruleVariability.value,
-        ruleProbability: r.children.ruleProbability.value
+        ruleProbability: 100 // Default to 100 for Average Joe
     }));
 
     const startStr = mavo.root.children.backfillDate.value || dayjs().subtract(30, 'days').format('YYYY-MM-DD');
@@ -95,6 +108,7 @@ window.runSimulation = function() {
         newTransactions.sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix());
         transactionsList.clear();
         newTransactions.forEach(t => transactionsList.add(t));
+        console.log(`✅ Simulation complete. ${newTransactions.length} transactions generated.`);
         
         const emptyState = document.getElementById('empty-ledger-state');
         if (emptyState) {
@@ -111,11 +125,11 @@ window.downloadCSV = function() {
     let csv = "Date,Description,Amount,Type,Status\n";
     transactions.forEach(t => {
         const row = [
-            t.children.date ? t.children.date.value : '',
-            `"${t.children.description ? t.children.description.value : ''}"`,
-            t.children.amount ? t.children.amount.value : '',
-            t.children.type ? t.children.type.value : '',
-            t.children.status ? t.children.status.value : ''
+            t.children.date.value,
+            `"${t.children.description.value}"`,
+            t.children.amount.value,
+            t.children.type.value,
+            t.children.status.value
         ];
         csv += row.join(",") + "\n";
     });
@@ -125,52 +139,13 @@ window.downloadCSV = function() {
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'vibebank_ledger.csv');
+    a.setAttribute('download', 'vibebank_history.csv');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 };
 
-const DEFAULT_PERSONA = {
-    accountName: "Main Checking (..4291)",
-    initialBalance: 4250.32,
-    rules: [
-        // Income
-        { ruleDescription: "Bi-Weekly Salary Payout", ruleType: "income", ruleAmount: 3250.00, ruleFrequency: "weekly", ruleVariability: 0, ruleProbability: 50 },
-        { ruleDescription: "IRS Tax Refund", ruleType: "income", ruleAmount: 1200.00, ruleFrequency: "once", ruleVariability: 0, ruleProbability: 100 },
-        
-        // Fixed Expenses
-        { ruleDescription: "Mortgage Payment (Chase)", ruleType: "expense", ruleAmount: 2150.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-        { ruleDescription: "Car Loan (Ford Credit)", ruleType: "expense", ruleAmount: 485.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-        { ruleDescription: "State Farm Insurance", ruleType: "expense", ruleAmount: 185.00, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-        { ruleDescription: "Verizon Wireless", ruleType: "expense", ruleAmount: 142.50, ruleFrequency: "monthly", ruleVariability: 5, ruleProbability: 100 },
-        { ruleDescription: "Netflix / Spotify Bundle", ruleType: "expense", ruleAmount: 35.99, ruleFrequency: "monthly", ruleVariability: 0, ruleProbability: 100 },
-        
-        // Variable Expenses
-        { ruleDescription: "Kroger Groceries", ruleType: "expense", ruleAmount: 150.00, ruleFrequency: "weekly", ruleVariability: 40, ruleProbability: 100 },
-        { ruleDescription: "Shell Gas Station", ruleType: "expense", ruleAmount: 45.00, ruleFrequency: "weekly", ruleVariability: 30, ruleProbability: 80 },
-        { ruleDescription: "Starbucks Coffee", ruleType: "expense", ruleAmount: 7.50, ruleFrequency: "daily", ruleVariability: 20, ruleProbability: 60 },
-        { ruleDescription: "Amazon Prime Purchase", ruleType: "expense", ruleAmount: 85.00, ruleFrequency: "weekly", ruleVariability: 90, ruleProbability: 40 },
-        { ruleDescription: "Home Depot Project", ruleType: "expense", ruleAmount: 250.00, ruleFrequency: "monthly", ruleVariability: 80, ruleProbability: 30 }
-    ]
-};
-
 const VibeBankCore = {
-    calculateBalance: function(transactions, initialBalance = 0) {
-        if (!transactions || !Array.isArray(transactions)) return initialBalance;
-        return transactions.reduce((acc, t) => {
-            const amt = parseFloat(t.amount) || 0;
-            return t.type === 'income' ? acc + amt : acc - amt;
-        }, initialBalance);
-    },
-
-    formatCurrency: function(amount) {
-        return new Intl.NumberFormat('en-US', { 
-            style: 'currency', 
-            currency: 'USD'
-        }).format(amount);
-    },
-
     generateTransactions: function(rules, startDateStr, endDateStr) {
         const start = dayjs(startDateStr).startOf('day');
         const end = dayjs(endDateStr).endOf('day');
@@ -180,8 +155,7 @@ const VibeBankCore = {
         let current = start;
         while (current.isBefore(end) || current.isSame(end, 'day')) {
             rules.forEach(rule => {
-                const prob = parseFloat(rule.ruleProbability) || 100;
-                if (Math.random() * 100 > prob) return;
+                if (!rule.ruleDescription) return;
 
                 const freq = rule.ruleFrequency || 'daily';
                 let shouldOccur = false;
@@ -212,7 +186,6 @@ const VibeBankCore = {
     }
 };
 
-// Auto-run simulation on load if we are already on the dashboard
 document.addEventListener("mavo:load", (e) => {
     const mavo = e.mavo;
     if (mavo.id === "vibebank" && mavo.root.children.currentPage.value === 'dashboard') {

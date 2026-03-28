@@ -1,105 +1,76 @@
 :root {
-    --vibeWhite: #FFFFFF;
-    --vibeLight: #F5F7FA;
-    --vibeTrustBlue: #0070BA; /* PayPal Blue */
-    --vibeTrustBlueHover: #005EA6;
-    --vibeGrowthGreen: #00C805; /* Robinhood Green */
-    --vibeTextMain: #1E293B;
-    --vibeTextLight: #64748B;
-    --vibeBorder: #E2E8F0;
-    --vibeShadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --apple-bg: #FBFBFD;
+    --apple-card: rgba(255, 255, 255, 0.8);
+    --m3-surface: #F3F4F9;
+    --m3-primary: #0070BA;
+    --m3-on-primary: #FFFFFF;
+    --m3-primary-container: #D3E4FF;
+    --m3-on-primary-container: #001C38;
+    --growth-green: #00C805;
+    --apple-border: rgba(0, 0, 0, 0.08);
 }
 
 body {
-    background-color: var(--vibeLight);
-    color: var(--vibeTextMain);
+    background-color: var(--m3-surface);
+    color: #1C1C1E;
+    letter-spacing: -0.015em;
 }
 
-/* Custom Utilities for Bright Theme */
-.bg-vibe-glow {
-    background: radial-gradient(circle, rgba(0, 112, 186, 0.05) 0%, transparent 70%);
+/* Glassmorphism */
+.glass {
+    background: var(--apple-card);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--apple-border);
 }
 
-.shadow-premium {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-}
-
-.shadow-vibe-trust {
-    box-shadow: 0 0 15px rgba(0, 112, 186, 0.2);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: var(--vibeLight);
-}
-::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--vibeTrustBlue);
+/* Apple Style Shadows */
+.apple-shadow {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
 }
 
 /* Mavo Overrides */
 [mv-app] .mv-bar.mv-ui {
     padding: 0;
+    margin-bottom: 1rem;
     background: transparent;
     border: none;
-    box-shadow: none;
 }
 
 .mv-bar.mv-ui .mv-button {
-    background: var(--vibeWhite);
-    border: 1px solid var(--vibeBorder);
-    color: var(--vibeTextMain);
-    border-radius: 9999px;
-    padding: 0.25rem 0.75rem;
+    background: white;
+    border: 1px solid var(--apple-border);
+    border-radius: 12px;
+    padding: 0.4rem 1rem;
+    font-weight: 600;
     font-size: 0.75rem;
-    transition: all 0.2s;
+    color: #1C1C1E;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.mv-bar.mv-ui .mv-button:hover {
-    border-color: var(--vibeTrustBlue);
-    color: var(--vibeTrustBlue);
-}
-
-/* Ledger & Status Colors */
-.income { color: var(--vibeGrowthGreen); font-weight: 600; }
+/* Ledger UI */
+.income { color: var(--growth-green); font-weight: 700; }
 .income::before { content: "+$"; }
 
-.expense { color: var(--vibeTextMain); }
+.expense { color: #1C1C1E; font-weight: 500; }
 .expense::before { content: "-$"; }
 
-tr.Scheduled td {
-    opacity: 0.6;
-    font-style: italic;
+tr.Scheduled { opacity: 0.5; }
+tr.Scheduled [property="status"] {
+    background: var(--m3-primary-container);
+    color: var(--m3-on-primary-container);
 }
 
-[property="status"].Scheduled {
-    border-color: var(--vibeTrustBlue);
-    color: var(--vibeTrustBlue);
-    background-color: rgba(0, 112, 186, 0.05);
+/* Animations */
+.transition-spring {
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Transitions */
-.transition-all-slow {
-    transition: all 2000ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Focus States */
-*:focus-visible {
-    outline: 2px solid var(--vibeTrustBlue);
-    outline-offset: 2px;
+.animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }

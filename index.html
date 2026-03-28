@@ -3,273 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VibeBank | Trustworthy Fictional Finance</title>
+    <title>VibeBank | Fictional Finance</title>
     
-    <!-- External Dependencies -->
+    <!-- Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js"></script>
     
-    <!-- Mavo Core -->
+    <!-- Mavo -->
     <link rel="stylesheet" href="https://get.mavo.io/mavo.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://get.mavo.io/mavo.js"></script>
 
-    <!-- Tailwind Config for VibeBank "Bright" Aesthetic -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    borderRadius: { '3xl': '24px', '4xl': '32px' },
                     colors: {
-                        trustBlue: '#0070BA',
-                        trustBlueHover: '#005EA6',
-                        growthGreen: '#00C805',
-                        vibeWhite: '#FFFFFF',
-                        vibeLight: '#F5F7FA',
-                        vibeSlate: '#1E293B',
-                        vibeBorder: '#E2E8F0',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                        serif: ['Playfair Display', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+                        appleBlue: '#007AFF',
+                        m3Primary: '#0070BA',
+                        m3Surface: '#F3F4F9',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-vibeLight text-vibeSlate font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-m3Surface text-slate-900 font-sans antialiased min-h-screen">
 
-    <!-- MAVO APP ROOT -->
-    <div mv-app="vibebank" 
-         mv-storage="local" 
-         class="flex-grow flex flex-col"
-         mv-init="data.json">
-
-        <!-- App State (Hidden) -->
+    <div mv-app="vibebank" mv-storage="local" class="flex flex-col min-h-screen">
         <span property="currentPage" hidden>landing</span>
 
-        <!-- ========================================== -->
-        <!-- NAVIGATION / HEADER                        -->
-        <!-- ========================================== -->
-        <nav class="border-b border-vibeBorder bg-vibeWhite bg-opacity-90 backdrop-blur-md sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-20 items-center">
-                    <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.Mavo.all.vibebank.root.children.currentPage.setValue('landing')" aria-label="Go to Home">
-                        <span class="text-3xl font-serif font-bold text-trustBlue tracking-tight">Vibe<span class="text-vibeSlate">Bank</span></span>
+        <!-- Apple-Style Nav -->
+        <nav class="glass sticky top-0 z-50 h-16 flex items-center px-6 transition-all duration-300">
+            <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.reload()">
+                    <div class="w-8 h-8 bg-m3Primary rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xs">V</span>
                     </div>
-                    
-                    <!-- Landing Page Navigation -->
-                    <div mv-if="currentPage = 'landing'" class="hidden md:flex items-center space-x-8">
-                        <button onclick="window.Mavo.all.vibebank.root.children.currentPage.setValue('story')" class="text-vibeSlate font-medium hover:text-trustBlue transition">The Story</button>
-                        <button onclick="window.startInstantOnboarding()" class="bg-trustBlue hover:bg-trustBlueHover text-white font-semibold px-6 py-2.5 rounded-full transition duration-300 transform hover:scale-105 shadow-vibe-trust">
-                            Open an Account
-                        </button>
-                    </div>
+                    <span class="text-xl font-bold tracking-tight">VibeBank</span>
+                </div>
+                
+                <div mv-if="currentPage = 'landing'" class="flex gap-6 items-center">
+                    <button onclick="window.startInstantOnboarding()" class="bg-m3Primary text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-spring active:scale-95 shadow-lg shadow-blue-500/20">
+                        Get Started
+                    </button>
+                </div>
 
-                    <!-- Dashboard Navigation -->
-                    <div mv-if="currentPage = 'dashboard'" class="flex items-center space-x-4">
-                        <div class="mavo-controls text-sm" mv-bar="no-login logout"></div>
-                        <button onclick="window.Mavo.all.vibebank.root.children.currentPage.setValue('landing')" class="text-slate-500 hover:text-vibeSlate text-sm font-medium">Sign Out</button>
-                    </div>
+                <div mv-if="currentPage = 'dashboard'" class="flex gap-4 items-center">
+                    <div class="mavo-controls" mv-bar="no-login logout"></div>
+                    <button onclick="window.Mavo.all.vibebank.root.children.currentPage.setValue('landing')" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition">Sign Out</button>
                 </div>
             </div>
         </nav>
 
-        <!-- ========================================== -->
-        <!-- PAGE 1: LANDING PAGE                       -->
-        <!-- ========================================== -->
-        <main mv-if="currentPage = 'landing'" class="flex-grow flex flex-col justify-center items-center px-4 py-24 text-center relative overflow-hidden">
-            <!-- Background Glow -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-vibe-glow pointer-events-none"></div>
-
-            <div class="relative z-10 max-w-4xl">
-                <div class="inline-block border border-trustBlue border-opacity-20 bg-trustBlue bg-opacity-5 text-trustBlue px-4 py-1.5 rounded-full text-sm font-semibold mb-8">
-                    Performance Art as a Service. Built in a weekend.
-                </div>
-                <h1 class="text-6xl md:text-8xl font-serif font-extrabold mb-6 leading-tight text-vibeSlate">
-                    Banking, but <br/>
-                    <span class="text-trustBlue">it's a vibe.</span>
+        <!-- PAGE 1: HERO (Apple Style) -->
+        <main mv-if="currentPage = 'landing'" class="flex-grow flex flex-col items-center justify-center text-center px-6 py-20">
+            <div class="animate-slide-up">
+                <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-500">
+                    The bank designed <br/>by a feeling.
                 </h1>
-                <p class="text-xl md:text-2xl text-slate-500 mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
-                    Experience the future of fictional finance. VibeBank is a high-fidelity demonstration of rapid "vibe coding"—clean, fast, and remarkably safe.
+                <p class="text-lg md:text-xl text-slate-500 max-w-xl mx-auto mb-10 leading-relaxed">
+                    VibeBank uses synthetic financial genetics to build your entire banking history in seconds. Fast, safe, and entirely fictional.
                 </p>
-                
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <button onclick="window.startInstantOnboarding()" class="bg-vibeSlate text-white hover:bg-black font-bold text-lg px-10 py-4 rounded-full transition duration-300 shadow-xl">
-                        Get Started Now
-                    </button>
-                    <button onclick="window.Mavo.all.vibebank.root.children.currentPage.setValue('story')" class="border-2 border-slate-200 hover:border-trustBlue text-vibeSlate font-bold text-lg px-10 py-4 rounded-full transition duration-300">
-                        View Manifesto
+                <div class="flex gap-4 justify-center">
+                    <button onclick="window.startInstantOnboarding()" class="bg-m3Primary text-white px-8 py-4 rounded-full font-bold text-lg shadow-2xl shadow-blue-500/20 hover:scale-105 transition-spring">
+                        Open Account
                     </button>
                 </div>
             </div>
         </main>
 
-        <!-- ========================================== -->
-        <!-- PAGE 2: THE VIBE STORY                     -->
-        <!-- ========================================== -->
-        <main mv-if="currentPage = 'story'" class="flex-grow max-w-3xl mx-auto px-4 py-16">
-            <button onclick="window.Mavo.all.vibebank.root.children.currentPage.setValue('landing')" class="text-trustBlue font-semibold hover:underline mb-8 flex items-center gap-2" aria-label="Back to landing">
-                ← Back to Home
-            </button>
-            <article class="prose prose-slate lg:prose-xl font-serif">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-vibeSlate">Modern Art, Modern Finance.</h1>
-                <p class="text-slate-600 lead italic">
-                    What if a bank didn't take years to build? What if it just took a weekend and a vibe?
-                </p>
-                <p class="text-slate-500">
-                    VibeBank is a performance art piece. It is a fully functional banking simulator that looks and feels like a billion-dollar fintech, built using low-code tools and AI. It challenges the traditional banking industry by showing how presentation and experience can be engineered from the outside in.
-                </p>
-                <h3 class="text-2xl font-bold text-trustBlue mt-8 mb-4">Clean. Safe. Fast.</h3>
-                <p class="text-slate-500">
-                    Our architecture is built for the user first. By using a unified presentation layer and a flexible simulation engine, VibeBank provides a "smooth" experience that traditional core providers often struggle to match.
-                </p>
-            </article>
-        </main>
-
-        <!-- ========================================== -->
-        <!-- PAGE 3: ONBOARDING FLOW                    -->
-        <!-- ========================================== -->
-        <main mv-if="currentPage = 'onboarding'" class="flex-grow flex items-center justify-center p-4">
-            <div class="bg-vibeWhite border border-vibeBorder rounded-3xl shadow-premium p-8 md:p-12 w-full max-w-md relative text-center">
-                <div class="animate-fade-in py-4" id="verification-step">
-                    <div class="w-16 h-16 bg-trustBlue bg-opacity-10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-trustBlue animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    </div>
-                    <h2 class="text-2xl font-bold text-vibeSlate mb-2">Verifying Identity</h2>
-                    <p class="text-slate-500 mb-8 font-medium">Securing your profile with bank-grade vibes...</p>
-                    
-                    <div class="w-full bg-vibeLight rounded-full h-3 mb-4 overflow-hidden border border-vibeBorder" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="verification-progress-container">
-                        <div class="bg-trustBlue h-full rounded-full transition-all-slow w-0" id="progress-bar"></div>
-                    </div>
-                    
-                    <p class="text-trustBlue text-sm font-bold h-6" id="verification-text" aria-live="polite">Contacting credit bureaus...</p>
+        <!-- PAGE 2: VERIFICATION (M3 Style) -->
+        <main mv-if="currentPage = 'onboarding'" class="flex-grow flex items-center justify-center p-6">
+            <div class="bg-white rounded-4xl p-10 max-w-sm w-full apple-shadow text-center">
+                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <div class="w-12 h-12 border-4 border-m3Primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Verifying Vibe</h2>
+                <p class="text-slate-400 text-sm mb-8" id="verification-text">Syncing with fictional reality...</p>
+                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                    <div id="progress-bar" class="bg-m3Primary h-full w-0 transition-all-slow"></div>
                 </div>
             </div>
         </main>
 
-        <!-- ========================================== -->
-        <!-- PAGE 4: DASHBOARD                          -->
-        <!-- ========================================== -->
-        <main mv-if="currentPage = 'dashboard'" class="flex-grow w-full max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- PAGE 3: DASHBOARD (Hybrid) -->
+        <main mv-if="currentPage = 'dashboard'" class="flex-grow max-w-7xl mx-auto w-full p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- Sidebar / Controls -->
-            <div class="lg:col-span-1 space-y-6">
+            <!-- Left: Account & Rules -->
+            <div class="lg:col-span-4 space-y-6">
                 <!-- Account Card -->
-                <div class="bg-vibeWhite border border-vibeBorder rounded-3xl p-8 shadow-premium relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-trustBlue bg-opacity-5 rounded-full blur-2xl pointer-events-none"></div>
-                    <h3 class="text-slate-400 font-bold text-xs mb-1 uppercase tracking-widest">Available Balance</h3>
-                    <div class="text-5xl font-bold text-vibeSlate mb-8 font-serif" property="currentBalance" mv-value="window.calculateBalance(transactions)" aria-live="polite">$0.00</div>
+                <div class="bg-white rounded-3xl p-8 apple-shadow border border-white">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">Account Balance</span>
+                    <div class="text-5xl font-bold tracking-tighter mb-8" property="currentBalance" mv-value="window.calculateBalance(transactions)">$0.00</div>
                     
-                    <div class="space-y-4 pt-6 border-t border-vibeBorder">
-                        <div>
-                            <label for="account-name-input" class="block text-xs font-bold text-slate-400 uppercase tracking-tighter mb-1">Account Name</label>
-                            <input property="accountName" id="account-name-input" placeholder="Main Checking" class="bg-vibeLight text-vibeSlate font-bold px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-trustBlue focus:ring-opacity-20 w-full transition">
-                        </div>
+                    <div class="pt-6 border-t border-slate-50">
+                        <label class="text-[10px] font-black text-slate-300 uppercase block mb-1">Nickname</label>
+                        <input property="accountName" class="w-full text-lg font-bold focus:outline-none bg-transparent" placeholder="My Checking">
                     </div>
                 </div>
 
-                <!-- Simulation Controls -->
-                <div class="bg-vibeWhite border border-vibeBorder rounded-3xl p-6 shadow-premium">
-                    <h3 class="text-vibeSlate font-bold mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-trustBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Engine Core
-                    </h3>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label for="backfill-date-input" class="block text-xs font-bold text-slate-400 uppercase mb-1">Backfill Date</label>
-                            <input property="backfillDate" id="backfill-date-input" type="date" class="w-full bg-vibeLight border border-vibeBorder rounded-xl p-2.5 text-vibeSlate font-medium focus:outline-none focus:ring-2 focus:ring-trustBlue focus:ring-opacity-20 text-sm transition">
+                <!-- Simulation Info (M3 Container) -->
+                <div class="bg-blue-50 rounded-3xl p-6 border border-blue-100/50">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center apple-shadow">
+                            <span class="text-m3Primary">⚙️</span>
                         </div>
-                        <button onclick="window.runSimulation()" class="w-full bg-trustBlue hover:bg-trustBlueHover text-white font-bold py-3 rounded-xl transition shadow-vibe-trust text-sm">
-                            Run Simulation
+                        <h3 class="font-bold">Engine</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <input property="backfillDate" type="date" class="w-full bg-white rounded-xl px-4 py-2 text-sm font-bold border-none apple-shadow focus:ring-2 focus:ring-m3Primary/20">
+                        <button onclick="window.runSimulation()" class="w-full bg-m3Primary text-white py-3 rounded-2xl font-bold text-sm shadow-lg shadow-blue-500/10 active:scale-95 transition-spring">
+                            Refresh History
                         </button>
                     </div>
                 </div>
 
-                <!-- Transaction Rules -->
-                <div class="bg-vibeWhite border border-vibeBorder rounded-3xl p-6 shadow-premium">
-                    <h3 class="text-vibeSlate font-bold mb-4 uppercase text-xs tracking-widest text-slate-400">Fictional Genetics</h3>
-                    <div mv-list property="rule">
-                        <div mv-list-item class="mb-4 bg-vibeLight border border-vibeBorder p-4 rounded-2xl">
-                            <input property="ruleDescription" placeholder="Description" aria-label="Rule Description" class="w-full bg-transparent text-vibeSlate font-bold border-b border-slate-200 mb-3 pb-1 focus:outline-none text-sm">
-                            
-                            <div class="grid grid-cols-2 gap-3 text-xs">
-                                <select property="ruleType" aria-label="Rule Type" class="bg-vibeWhite border border-vibeBorder text-vibeSlate font-medium rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-trustBlue">
-                                    <option value="income">Income (+)</option>
-                                    <option value="expense">Expense (-)</option>
-                                </select>
-                                
-                                <input property="ruleAmount" type="number" placeholder="Amt $" aria-label="Rule Amount" class="bg-vibeWhite border border-vibeBorder text-vibeSlate font-bold rounded-lg p-2 w-full">
-                                
-                                <select property="ruleFrequency" aria-label="Rule Frequency" class="bg-vibeWhite border border-vibeBorder text-vibeSlate font-medium rounded-lg p-2">
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="once">Once</option>
-                                </select>
-                                
-                                <div class="flex items-center">
-                                    <input property="ruleVariability" type="number" placeholder="Var %" aria-label="Rule Variability Percentage" class="bg-vibeWhite border border-vibeBorder text-vibeSlate rounded-lg p-2 w-full" title="Variance %">
-                                </div>
-                            </div>
+                <!-- Rules -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-black text-slate-400 uppercase px-4">Financial Rules</h3>
+                    <div mv-multiple="rule" class="bg-white rounded-2xl p-4 apple-shadow border border-white mb-3">
+                        <input property="ruleDescription" class="w-full font-bold text-sm border-b border-slate-50 mb-3 focus:outline-none" placeholder="Rule Name">
+                        <div class="grid grid-cols-2 gap-2">
+                            <select property="ruleType" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase">
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                            <input property="ruleAmount" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold" placeholder="$">
+                            <select property="ruleFrequency" class="bg-slate-50 rounded-lg p-2 text-[10px] font-bold uppercase">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="once">Once</option>
+                            </select>
+                            <input property="ruleVariability" type="number" class="bg-slate-50 rounded-lg p-2 text-xs font-bold" placeholder="Var %">
                         </div>
                     </div>
-                    <button class="mv-add-rule w-full py-3 border-2 border-dashed border-slate-200 hover:border-trustBlue text-slate-400 hover:text-trustBlue rounded-2xl text-sm font-bold transition">
-                        + Add Core Rule
+                    <button class="mv-add-rule w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold text-xs hover:border-m3Primary hover:text-m3Primary transition-all">
+                        + New Core Rule
                     </button>
                 </div>
             </div>
 
-            <!-- Main Stage: Ledger -->
-            <div class="lg:col-span-2">
-                <div class="bg-vibeWhite border border-vibeBorder rounded-3xl p-8 shadow-premium h-full flex flex-col">
-                    <div class="flex justify-between items-center mb-8">
-                        <div>
-                            <h2 class="text-3xl font-serif font-bold text-vibeSlate">Transaction Ledger</h2>
-                            <p class="text-sm text-slate-400 mt-1 font-medium italic">Synthetic financial history.</p>
-                        </div>
-                        <button onclick="window.downloadCSV()" class="bg-vibeLight hover:bg-slate-200 text-vibeSlate px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition border border-vibeBorder">
-                            <svg class="w-4 h-4 text-trustBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Export CSV
-                        </button>
+            <!-- Right: Ledger -->
+            <div class="lg:col-span-8">
+                <div class="bg-white rounded-4xl p-8 apple-shadow border border-white min-h-full">
+                    <div class="flex justify-between items-center mb-10">
+                        <h2 class="text-2xl font-bold tracking-tight">Ledger</h2>
+                        <button onclick="window.downloadCSV()" class="text-xs font-black text-m3Primary uppercase tracking-tighter hover:underline">Export CSV</button>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="text-slate-400 uppercase text-xs tracking-widest font-bold border-b border-vibeBorder">
-                                    <th class="py-4 px-4">Date</th>
-                                    <th class="py-4 px-4">Description</th>
-                                    <th class="py-4 px-4 text-right">Amount</th>
-                                    <th class="py-4 px-4 text-center">Status</th>
+                    <div class="overflow-hidden">
+                        <table class="w-full text-left">
+                            <thead class="border-b border-slate-50">
+                                <tr class="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                                    <th class="pb-4 px-2">Date</th>
+                                    <th class="pb-4 px-2">Description</th>
+                                    <th class="pb-4 px-2 text-right">Amount</th>
                                 </tr>
                             </thead>
-                            <tbody mv-list property="transactions" class="divide-y divide-slate-50">
-                                <tr mv-list-item class="group hover:bg-vibeLight transition [status]">
-                                    <td class="py-5 px-4 whitespace-nowrap text-sm text-slate-500 font-medium" property="date"></td>
-                                    <td class="py-5 px-4 text-sm font-bold text-vibeSlate" property="description"></td>
-                                    <td class="py-5 px-4 whitespace-nowrap text-sm text-right font-mono" property="amount" class="[type]"></td>
-                                    <td class="py-5 px-4 whitespace-nowrap text-xs text-center">
-                                        <span property="status" class="px-3 py-1 rounded-full bg-vibeLight border border-vibeBorder text-slate-500 font-bold"></span>
-                                        <span property="type" hidden></span>
-                                    </td>
+                            <tbody mv-multiple="transactions" class="divide-y divide-slate-50">
+                                <tr class="group transition-all hover:bg-slate-50 [status]">
+                                    <td class="py-4 px-2 text-xs font-bold text-slate-400" property="date"></td>
+                                    <td class="py-4 px-2 text-sm font-bold text-slate-800" property="description"></td>
+                                    <td class="py-4 px-2 text-sm text-right font-black" property="amount" class="[type]"></td>
+                                    <td property="status" hidden></td>
+                                    <td property="type" hidden></td>
                                 </tr>
                             </tbody>
                         </table>
                         
-                        <!-- Empty State -->
-                        <div class="text-center py-24" id="empty-ledger-state" style="display: none;">
-                            <div class="w-20 h-20 bg-vibeLight rounded-full flex items-center justify-center mx-auto mb-6">
-                                <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            </div>
-                            <p class="text-slate-400 font-bold text-lg">No transactions found.</p>
-                            <p class="text-slate-300 text-sm mb-8">Run the engine to generate your fictional history.</p>
+                        <div id="empty-ledger-state" style="display:none;" class="py-20 text-center opacity-20">
+                            <div class="text-4xl mb-2">🧊</div>
+                            <p class="font-bold">Ledger is frozen. Run engine.</p>
                         </div>
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 
