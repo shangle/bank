@@ -1,7 +1,7 @@
 :root {
     --bg-surface: #F8F9FC;
     --card-bg: rgba(255, 255, 255, 0.9);
-    --primary: #0061FF; /* Apple-ish Blue */
+    --primary: #0061FF;
     --text-main: #1C1C1E;
     --text-muted: #636366;
     --border: rgba(0, 0, 0, 0.05);
@@ -14,6 +14,7 @@ body {
     color: var(--text-main);
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     letter-spacing: -0.02em;
+    overflow-x: hidden;
 }
 
 /* Glassmorphism & Elevation */
@@ -26,6 +27,23 @@ body {
     border-radius: var(--radius-lg);
 }
 
+/* Interaction Sheets (Apple Style) */
+.sheet-backdrop {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s ease;
+}
+
+.sheet {
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    transform: translateY(100%);
+}
+
+.sheet.active {
+    transform: translateY(0);
+}
+
+/* M3 Tonal Buttons */
 .m3-tonal-btn {
     background-color: #E7F0FF;
     color: var(--primary);
@@ -35,6 +53,10 @@ body {
 .m3-tonal-btn:hover {
     background-color: #D1E4FF;
     transform: scale(1.02);
+}
+
+.m3-tonal-btn:active {
+    transform: scale(0.96);
 }
 
 /* Custom Scrollbar */
@@ -49,21 +71,34 @@ body {
     border-radius: 10px;
 }
 
-/* Mavo Hide Bar */
-[mv-app] .mv-bar.mv-ui {
-    display: none !important;
-}
-
-/* Typography Polish */
+/* Typography */
 .balance-text {
     font-weight: 800;
     letter-spacing: -0.04em;
 }
 
-.transaction-item {
-    transition: background 0.2s ease;
+/* Form Polish */
+input, select {
+    background: #F2F2F7;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.2s;
 }
 
-.transaction-item:hover {
-    background: rgba(0, 0, 0, 0.02);
+input:focus {
+    outline: 2px solid var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(0, 97, 255, 0.1);
+}
+
+/* FaceID Toggle (Mock) */
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #34C759;
+}
+.toggle-checkbox:checked + .toggle-label .toggle-dot {
+    transform: translateX(100%);
 }
