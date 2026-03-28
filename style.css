@@ -14,10 +14,9 @@ body {
     color: var(--text-main);
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     letter-spacing: -0.02em;
-    overflow-x: hidden;
 }
 
-/* Glassmorphism & Elevation */
+/* Glassmorphism */
 .glass-card {
     background: var(--card-bg);
     backdrop-filter: blur(20px) saturate(180%);
@@ -27,7 +26,12 @@ body {
     border-radius: var(--radius-lg);
 }
 
-/* Interaction Sheets (Apple Style) */
+/* Mavo Safety: Custom Classes for Arbitrary Values */
+.text-xs-bold { font-size: 10px; font-weight: 900; }
+.tracking-tight-vibes { letter-spacing: 0.2em; }
+.sheet-z-index { z-index: 60; }
+
+/* Interaction Sheets */
 .sheet-backdrop {
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(4px);
@@ -55,29 +59,22 @@ body {
     transform: scale(1.02);
 }
 
-.m3-tonal-btn:active {
-    transform: scale(0.96);
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background: #E2E2E2;
-    border-radius: 10px;
-}
-
-/* Typography */
+/* Balance & Typography */
 .balance-text {
     font-weight: 800;
     letter-spacing: -0.04em;
 }
 
-/* Form Polish */
+/* Transaction Types */
+.expense { color: #1C1C1E; }
+.income { color: #0061FF; font-weight: 800; }
+
+/* Mavo UI Hiding */
+[mv-app] .mv-bar.mv-ui {
+    display: none !important;
+}
+
+/* Form Styles */
 input, select {
     background: #F2F2F7;
     border: none;
@@ -86,19 +83,4 @@ input, select {
     font-size: 16px;
     font-weight: 600;
     width: 100%;
-    transition: all 0.2s;
-}
-
-input:focus {
-    outline: 2px solid var(--primary);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(0, 97, 255, 0.1);
-}
-
-/* FaceID Toggle (Mock) */
-.toggle-checkbox:checked + .toggle-label {
-    background-color: #34C759;
-}
-.toggle-checkbox:checked + .toggle-label .toggle-dot {
-    transform: translateX(100%);
 }

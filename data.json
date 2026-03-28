@@ -4,23 +4,12 @@
         {
             "categoryEmoji": "🛒",
             "description": "Amazon Marketplace",
-            "date": "Yesterday",
-            "amount": "- $45.00",
+            "date": "Mar 28",
+            "amount": "45.00",
             "type": "expense"
-        },
-        {
-            "categoryEmoji": "🍕",
-            "description": "Dominos Pizza",
-            "date": "Mar 27",
-            "amount": "- $24.50",
-            "type": "expense"
-        },
-        {
-            "categoryEmoji": "💰",
-            "description": "Salary Payout",
-            "date": "Mar 25",
-            "amount": "+ $3,250.00",
-            "type": "income"
         }
-    ]
+    ],
+    "profileName": "Joe Average",
+    "profileStatus": "Primary Member",
+    "activeSheet": "none"
 }
