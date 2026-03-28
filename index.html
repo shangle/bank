@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Banking Simulator</title>
+    <link rel="stylesheet" href="https://get.mavo.io/mavo.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://get.mavo.io/mavo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>🏦 Simulator Bank</h1>
+        <div class="mavo-controls" mv-bar="no-login logout"></div>
+    </header>
+
+    <main mv-app="bankingSim" 
+          mv-plugins="gsheets" 
+          mv-storage="local"
+          mv-init="data.json">
+        
+        <section id="account-setup" class="card">
+            <h2>Account Setup</h2>
+            <div class="grid">
+                <label>
+                    Account Name
+                    <input property="accountName" placeholder="e.g. Bubba's Checking">
+                </label>
+                <label>
+                    Initial Balance ($)
+                    <input property="initialBalance" type="number" step="0.01" mv-default="1000">
+                </label>
+                <label>
+                    Backfill Start Date
+                    <input property="backfillDate" type="date" mv-default="[dayjs().subtract(30, 'day').format('YYYY-MM-DD')]">
+                </label>
+            </div>
+            
+            <div class="persona-selector">
+                <h3>Select Persona</h3>
+                <div class="persona-grid">
+                    <button type="button" onclick="applyPersona('deadbeat')">Double-Wide Deadbeat</button>
+                    <button type="button" onclick="applyPersona('billionaire')">Billionaire Bubba</button>
+                    <button type="button" onclick="applyPersona('student')">Frugal Student</button>
+                    <button type="button" onclick="applyPersona('techbro')">Tech Bro</button>
+                    <button type="button" onclick="applyPersona('teacher')">Retired Teacher</button>
+                    <button type="button" onclick="applyPersona('mlm')">MLM Mom</button>
+                    <button type="button" onclick="applyPersona('nomad')">Digital Nomad</button>
+                    <button type="button" onclick="applyPersona('grinder')">Gig Grinder</button>
+                    <button type="button" onclick="applyPersona('artist')">Starving Artist</button>
+                    <button type="button" onclick="applyPersona('soccer')">Soccer Parent</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="transaction-rules" class="card">
+            <h2>Transaction Rules</h2>
+            <div mv-multiple="rule" class="rule-item">
+                <div class="grid">
+                    <input property="description" placeholder="Description">
+                    <select property="type">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <input property="baseAmount" type="number" step="0.01" placeholder="Amount">
+                    <select property="frequency">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="once">Once</option>
+                    </select>
+                    <input property="variance" type="number" placeholder="Variance %" title="Randomness of amount">
+                    <input property="probability" type="number" mv-default="100" placeholder="Prob %" title="Chance of occurrence">
+                </div>
+            </div>
+            <button class="mv-add-rule">Add Rule</button>
+        </section>
+
+        <section id="summary" class="card">
+            <div class="balance-display">
+                <span class="label">Current Balance:</span>
+                <span class="balance" property="currentBalance" mv-value="calculateBalance(transactions)">$0.00</span>
+            </div>
+            <button type="button" onclick="runSimulation()" class="btn-primary">🔄 Sync & Run Simulation</button>
+        </section>
+
+        <section id="ledger" class="card">
+            <h2>Transaction History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody mv-multiple="transactions" mv-list-sort="date desc">
+                    <tr class="[status]">
+                        <td property="date"></td>
+                        <td property="description"></td>
+                        <td property="amount" class="[type]"></td>
+                        <td property="status"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="engine.js"></script>
+    <script src="config.js"></script>
+</body>
+</html>

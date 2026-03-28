@@ -1,0 +1,16 @@
+{
+    "accountName": "New Account",
+    "initialBalance": 1000,
+    "backfillDate": "2024-03-01",
+    "rule": [
+        {
+            "description": "Initial Balance",
+            "type": "income",
+            "baseAmount": 1000,
+            "frequency": "once",
+            "variance": 0,
+            "probability": 100
+        }
+    ],
+    "transactions": []
+}
